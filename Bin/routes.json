@@ -1,0 +1,7 @@
+{
+    "routes": {
+        "/": "HomeController@index",
+        "/about": "HomeController@index",
+        "/contact": "HomeController@index"
+    }
+}

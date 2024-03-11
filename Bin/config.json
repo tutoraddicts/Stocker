@@ -1,0 +1,20 @@
+{
+    "-build": true,
+    "devEnviourment": {
+        "Root": "./",
+        "BinRoot": "../Bin",
+        "staticFolder": "Static",
+        "viewFolder": "Static/View",
+        "stylesFolder": "Static/Styles",
+        "controllersFolder": "Controllers",
+        "routeFile": "routes.json",
+        "indexFile": "index.php",
+        "configFile": "config.json"
+    },
+
+    "database": {
+        "host" : "localhost",
+        "userName": "admin",
+        "password": "admin"
+    }
+}

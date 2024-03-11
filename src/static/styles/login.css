@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff; /* white background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.login-container {
+  width: 300px;
+  padding: 20px;
+  background-color: #ffffff; /* white background for the box */
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* shadow effect */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.login-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333333; /* dark text color */
+}
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  width: calc(100% - 40px); /* Adjusting width */
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #cccccc; /* light gray border */
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+.login-container input[type="submit"],
+.login-container .register-btn {
+  width: calc(50% - 10px); /* Adjusting width */
+  padding: 10px;
+  background-color: #4caf50; /* light green button */
+  border: none;
+  border-radius: 5px;
+  color: #ffffff; /* white text color */
+  cursor: pointer;
+  margin-top: 10px; /* Adjusting margin for alignment */
+  text-decoration: none; /* Removing underline from anchor tag */
+  text-align: center; /* Centering text */
+}
+.login-container input[type="submit"]:hover,
+.login-container .register-btn:hover {
+  background-color: #45a049; /* darker shade of green on hover */
+}

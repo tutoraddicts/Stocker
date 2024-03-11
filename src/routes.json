@@ -1,0 +1,10 @@
+{
+    "routes": {
+        "/": "HomeController@index",
+        "/about": "HomeController@index",
+        "/contact": "HomeController@index",
+        "/login": "LoginController@login",
+        "/login/failed": "LoginController@failedlogin",
+        "/register": "RegisterController@registerUser"
+    }
+}

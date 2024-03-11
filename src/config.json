@@ -1,0 +1,12 @@
+{
+    "build": false,
+
+    "database": {
+        "host" : "localhost",
+        "db" : "stocker",
+        "userName": "stocker",
+        "password": "P@ssw0rd#St0cker"
+    },
+
+    "holdSession" : true
+}
