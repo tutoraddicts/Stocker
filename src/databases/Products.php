@@ -3,7 +3,7 @@
 /**
  * Create a class and add varible with same name of the class 
 */
-class Products
+class Products extends DBTables
 {
     public $Products = array(
         "productName" => "VARCHAR(100)",

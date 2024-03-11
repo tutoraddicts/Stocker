@@ -5,6 +5,7 @@
         "/contact": "HomeController@index",
         "/login": "LoginController@login",
         "/login/failed": "LoginController@failedlogin",
-        "/register": "RegisterController@registerUser"
+        "/register": "RegisterController@registerUser",
+        "/logout": "LoginController@logout"
     }
 }

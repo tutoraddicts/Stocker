@@ -1,6 +1,8 @@
 <?php
 
 // Include all controller files
+
+require_once "db_tables.php";
 foreach (glob("controllers/*.php") as $Controllerfile) {
     include_once $Controllerfile; // This line includes each PHP file from the Controllers directory
 }
@@ -18,7 +20,7 @@ $config = json_decode(file_get_contents("config.json"), false);
 
 
 // Log message to browser console
-function logConsole($message): void
+function logconsole($message): void
 {
     echo "<script>console.log(\"$message\"); </script>";
 }
@@ -27,7 +29,7 @@ function logConsole($message): void
 function redirect($url, $statusCode = 302): void
 {
     global $requestUrl;
-    header('Location: ' . $requestUrl . $url);
+    header('Location: ' . $url);
     die();
 }
 
@@ -80,12 +82,12 @@ require_once "DB.php";
 // Starting the Session after including all the files
 session_start();
 
-if (!array_key_exists("Controllers", $_SESSION)) {
+if (!array_key_exists("Controllers", $_SESSION)) { 
     $_SESSION['Controllers'] = new Controllers();
 } else if ($_SESSION['Controllers'] === null || $config->holdSession === false) {
     $_SESSION['Controllers'] = new Controllers();
 } else {
-    logConsole("Controllers Object is already created");
+    logconsole("Controllers Object is already created");
 }
 
 if (!array_key_exists("DB", $_SESSION)) {
@@ -93,7 +95,7 @@ if (!array_key_exists("DB", $_SESSION)) {
 } else if ($_SESSION['DB'] === null || $config->holdSession === false) {
     $_SESSION['DB'] = new DB();
 } else {
-    logConsole("DB Object is already created");
+    logconsole("DB Object is already created");
 }
 
 
@@ -116,7 +118,7 @@ function createControllers(): void
         $controllerName = str_replace("controllers/", "", $file);
         $controllerName = str_replace(".php", "", $controllerName);
 
-        // logConsole("Registering controller : $controllerName");
+        // //logconsole("Registering controller : $controllerName");
         $Controllers->{$controllerName} = $controllerName;
     }
 }
@@ -133,10 +135,12 @@ function createDatabses(): void
         $databaseName = str_replace("databases/", "", $file);
         $databaseName = str_replace(".php", "", $databaseName);
 
+        ////logconsole("Creating Object of Database : $databaseName");
         // $dabaseTables = json_decode(file_get_contents($file), true);
         $DB->{$databaseName} = new $databaseName();
+        // var_dump( $DB->{$databaseName});
         // foreach ($dabaseTables as $k => $v) {
-        //     logConsole("Registering Database : $k");
+        //     //logconsole("Registering Database : $k");
         //     $DB->{$k} = $v;
         // }
         // Setting Table Attributes
@@ -162,7 +166,7 @@ function loadView($viewName, &$data = array(), &$args = array()): void
     }
 
     if ($buildFlag == false) {
-        logConsole("Getting the View Live because Build mode is off");
+        //logconsole("Getting the View Live because Build mode is off");
 
         createFolder("./.tempviews");
 

@@ -14,14 +14,22 @@ class LoginController
                 $data
             );
         }else {
-            var_dump($DB->Products);
-            // if ( $DB->Users->check_user($username) ){
-            //     echo "Successfully Loggedin";
-            // }else {
-            //     echo "Not able tologin";
-            // }
-            // echo "username : {{{ $username and password send : $password";
+            // var_dump($DB->Users);
+            if ( $DB->Users->check_user($username,$password) ){
+                echo "Successfully Loggedin";
+                session_start();
+                $_SESSION['user_name'] = $username;
+                redirect("./");
+            }else {
+                echo "Not able tologin</br>";
+            }
+            echo "username : $username and password : $password";
         }
 
+    }
+
+    function LogOut() {
+        session_destroy();
+        redirect('./');
     }
 }

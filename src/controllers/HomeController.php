@@ -22,16 +22,16 @@ class HomeController
     function index(...$args)
     {
         global $Controllers;
+        global $DB;
         // if user not logged in then redirect to different route
         if(!isUserLoggedin()){
             redirect("login");
-            // $Controllers->LoginController->login(); // just for example
-            // exit();
             return;
         }
-        // var_dump($_POST);
+        // var_dump($DB->Users->{$_SESSION['user_name']});
         $data = array(
-            "stocker" => "BillingApp"
+            "PageName" => "BillingApp",
+            "User" => $_SESSION['user_name']
         );
         // include "Static/View/index.php";
         loadView(

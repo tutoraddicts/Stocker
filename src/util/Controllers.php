@@ -7,11 +7,11 @@ class Controllers {
     private $Controllers = array();
 
     public function __construct() {
-        logConsole("Creating the Object of : ControllerObjects");
+        //logconsole("Creating the Object of : ControllerObjects");
     }
 
     public function __destruct(){
-        logConsole("Destroying the Object of : ControllerObjects");
+        //logconsole("Destroying the Object of : ControllerObjects");
     }
     
      // Magic method to set dynamic variables
@@ -19,9 +19,9 @@ class Controllers {
         
         if (!array_key_exists($name, $this->Controllers)){
             $this->Controllers[$name] = new $value();
-            logConsole("Registering Controller : $name");
+            //logconsole("Registering Controller : $name");
         }else {
-            logConsole("Controller is already registered : $name");
+            //logconsole("Controller is already registered : $name");
         }
         
     }
@@ -31,7 +31,7 @@ class Controllers {
         if (array_key_exists($name, $this->Controllers)) {
             return $this->Controllers[$name];
         }else {
-            logConsole("Onject is not there $name");
+            //logconsole("Onject is not there $name");
             // echo "Onject is not there $name";
             exit();
         }
