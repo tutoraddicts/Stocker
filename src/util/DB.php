@@ -159,27 +159,26 @@ class DB
 
     /**
      * @param string $query - query to run
-     * @return bool - returns true if the query ran successfully and false if not
-     * */
-    public function RunQuery (string $query ) {
+     * @return mixed false on failure. For successful queries which produce a result set, such as SELECT, SHOW, DESCRIBE or EXPLAIN, mysqli_query() will return a mysqli_result object. For other successful queries, mysqli_query() will return true .
+     */
+    public function RunQuery(string $query)
+    {
         if ($query == null) {
             return false;
         }
 
-        if (!$this->check_db_connection()){
+        if (!$this->check_db_connection()) {
             return false;
         }
 
-        logconsole("Running this query : $query");
-        $stmt = $this->dbConnection->prepare($query);
-        if ( !$stmt ){
+        logconsole("Running this query: $query");
+        $result = $this->dbConnection->query($query);
+        if (!$result) {
             return false;
         }
 
-        if (!$stmt->execute()){
-            return false;
-        }
-        return true;
+        return $result->fetch_all(MYSQLI_ASSOC);;
     }
+
 }
 

@@ -15,7 +15,17 @@ class LoginController
             );
         }else {
             // var_dump($DB->Users);
-            if ( $DB->Users->check_user($username,$password) ){
+            // $check_user = $DB->Users->check_user($username,$password);
+            $check_user = $DB->Users->Get(array(
+                "user_name" => array (
+                    "$username" => "="
+                ),
+                "password" => array (
+                    "$password" => "="
+                )
+                ));
+                // var_dump($check_user);
+            if ( $check_user ){
                 echo "Successfully Loggedin";
                 session_start();
                 $_SESSION['user_name'] = $username;
@@ -23,7 +33,7 @@ class LoginController
             }else {
                 echo "Not able tologin</br>";
             }
-            echo "username : $username and password : $password";
+            // echo "username : $username and password : $password";
         }
 
     }

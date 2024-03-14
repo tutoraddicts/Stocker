@@ -23,8 +23,6 @@ class Users extends DBTables
      */
     public function check_user($user_name, $password): bool
     {
-        global $DB;
-
         $user_data = &$this->{$user_name};
 
         // var_dump($user_data);
