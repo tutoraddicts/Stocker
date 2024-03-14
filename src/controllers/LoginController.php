@@ -22,7 +22,7 @@ class LoginController
                 ),
                 "password" => array (
                     "$password" => "="
-                )
+                ),
                 ));
                 // var_dump($check_user);
             if ( $check_user ){
