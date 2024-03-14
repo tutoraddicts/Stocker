@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Beautiful Home Page</title>
     <link rel="stylesheet" href="Static/Styles/main.css">
 </head>
+
 <body>
     <header>
         <div class="logo">
@@ -41,12 +43,45 @@
         <h2>List of Products</h2>
         <button class="add-product-btn">Add Product</button>
         <button class="bill-product-btn">Bill Product</button>
-        <ul class="product-list">
-            <li>Product 1</li>
-            <li>Product 2</li>
-            <li>Product 3</li>
-            <!-- Add more products here -->
+
+        @if ($products)
+        <ul class="product-list"></ul>
+        @foreach ($products as $product_name => $data)
+        <li>{{ echo $product_name }}</li>
+        @endforeach
+        <!-- Add more products here -->
         </ul>
+        @endif
+
+
+        @switch ($variable)
+        @case 'value1'
+
+        <p>Value 1 is selected</p>
+
+        @break
+        @case 'value2'
+
+        <p>Value 2 is selected</p>
+
+        @break
+
+        @default
+        <p>None of the predefined values are selected</p>
+
+        @endswitch;
+
+<?php switch ($products) : ?>
+<?php case 'value1' : ?>
+            <p>Value 1 is selected</p>
+<?php break; ?>
+<?php case 'value2': ?>
+            <p>Value 2 is selected</p>
+<?php break; ?>
+<?php default: ?>
+        <p>None of the predefined values are selected</p>
+<?php endswitch; ?>
     </main>
 </body>
+
 </html>

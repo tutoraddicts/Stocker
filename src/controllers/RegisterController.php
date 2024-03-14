@@ -2,7 +2,7 @@
 
 class RegisterController
 {
-    function registerUser($username = null, $password = null, $email_id = null, $first_name = null, $last_name = null, $secondary_email = null)
+    function registerUser($username = null, $password = null, $email_id = null, $first_name = null, $last_name = null, $secondary_email = null, ...$args)
     {
         global $DB;
 
