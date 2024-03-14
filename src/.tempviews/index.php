@@ -46,8 +46,7 @@
 
         <?php if($products): ?> 
 <ul class="product-list"></ul>
-        <?php foreach ($products as $product_name => $data): ?>
-
+        <?php foreach($products as $product_name => $data): ?>
         <li><?php  echo $product_name  ?></li>
         <?php endforeach; ?>
         <!-- Add more products here -->
@@ -55,27 +54,17 @@
         <?php endif; ?>
 
 
-<?php switch ($variable): ?>
-<?php case 'value1'
-: ?><p>Value 1 is selected</p>
+        <?php switch ($variable): 
+ case 'value1': ?>        <p>Value 1 is selected</p>
 
-        <?php break; ?><?php case 'value2'
-: ?><p>Value 2 is selected</p>
+        <?php break; ?>
+        <?php case 'value2' : ?>        <p>Value 2 is selected</p>
 
-        <?php break; ?><?php default: ?><p>None of the predefined values are selected</p>
+        <?php break; ?>
+        <?php default: ?>
+        <p>None of the predefined values are selected</p>
 
         <?php endswitch; ?>;
-
-<?php switch ($products) : ?>
-<?php case 'value1' : ?>
-            <p>Value 1 is selected</p>
-<?php break; ?>
-<?php case 'value2': ?>
-            <p>Value 2 is selected</p>
-<?php break; ?>
-<?php default: ?>
-        <p>None of the predefined values are selected</p>
-<?php endswitch; ?>
     </main>
 </body>
 

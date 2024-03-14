@@ -22,21 +22,22 @@ $patterns = array(
     '/{{(.*?)}}/' => "<?php $1 ?>", // Define patterns for {{}}
     '/@if\s*\((.*)\)\s*\n*/' => "<?php if(\$1): ?> \n", // Define the pattern for matching @if(condition) blocks
     '/@endif/s' => "<?php endif; ?>", // Define the pattern for matching @if(condition) { ... }@ blocks
-    /* '/(.*?)}@/s' => "<?php $1 } ?>", // for all closing brackets */
     '/@elseif\s*\((.*)\)\s*\n*/' => "<?php elseif(\$1): ?> \n", // Define the pattern for matching @elseif(condition) { ... }@ blocks
     '/@else(?!\w)/' => "<?php else: ?> \n", // Define the pattern for matching @else { ... }@ blocks
-    '/@(.*?)\((.*?)\)/' => "<?php \$1(\$2): ?>\n", // standalone dunction
 
-    '/@switch\((.*?)\)/' => "<?php switch (\$1): ?>\n",
+    '/@switch\s*\(\s*(.*?)\s*\)\s*\n*\s*@case\s*(.*?)\s*\n/' => "<?php switch (\$1): \n case \$2: ?>",
+    '/@case\s*(.*?)\s*\n/' => "<?php case \$1 : ?>",
+    '/@break\s*\n/' => "<?php break; ?>\n",
+    '/@default\s*\n/' => "<?php default: ?>\n",
 
     '/@endforeach(?!\w)/' => "<?php endforeach; ?>",
     '/@endfor(?!\w)/' => "<?php endfor; ?>",
     '/@endswitch(?!\w)/' => "<?php endswitch; ?>",
     '/@endwhile(?!\w)/' => "<?php endwhile; ?>",
+    
+    '/@(.*?)\s*\((.*?)\)\s*\n/' => "<?php \$1(\$2): ?>\n", // standalone dunction
+    '/@(.*?)\s*\n/' => "<?php \$1; ?>",
 
-    '/@case\s*(.*)\s*\n*/' => "<?php case \$1: ?>",
-    '/@break\s*/' => "<?php break; ?>",
-    '/@default\s*/' => "<?php default: ?>"
     // "while" => "/@while\((.*?)\) {(.+?)}@/s", // Define the pattern for matching @while(condition) { ... }@ blocks
     // "for" => "/@for\((.*?);(.*?);(.*?)\) {(.+?)}@/s", // Define the pattern for matching @for(init; condition; increment) { ... }@ blocks
     // "switch" => "/@switch\((.*?)\) {(.+?)}@/s", // Define the pattern for matching @switch(expression) { ... }@ blocks

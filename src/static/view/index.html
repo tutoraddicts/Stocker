@@ -54,7 +54,7 @@
         @endif
 
 
-        @switch ($variable)
+        @switch ($variable) 
         @case 'value1'
 
         <p>Value 1 is selected</p>
@@ -70,17 +70,6 @@
         <p>None of the predefined values are selected</p>
 
         @endswitch;
-
-<?php switch ($products) : ?>
-<?php case 'value1' : ?>
-            <p>Value 1 is selected</p>
-<?php break; ?>
-<?php case 'value2': ?>
-            <p>Value 2 is selected</p>
-<?php break; ?>
-<?php default: ?>
-        <p>None of the predefined values are selected</p>
-<?php endswitch; ?>
     </main>
 </body>
 
