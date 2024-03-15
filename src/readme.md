@@ -241,6 +241,25 @@ $DB->Products->Get(array(
     )
 ));
 ```
-
 The Query of the above code will be **SELECT * FROM Products WHERE ( products_tag = glass OR products_tag = bottle ) AND ( weight > 24 )**
+
+What if you want o add AND operation Between that **weight** Attribute then you have to do this
+```php
+$DB->Products->Get(array(
+    "products_tag" => array (
+        "glass" => "=",
+        "bottle" => "="
+    ),
+    "weight" => array (
+        24 => ">",
+        100 => arraY(
+            "AND" => "<" 
+        ),
+        75 => "!="
+        // weight > 24 AND weight < 100> weight != 75
+    )
+));
+```
+The Query of the above code will be **SELECT * FROM Products WHERE ( products_tag = glass OR products_tag = bottle ) AND ( weight > 24 AND weight < 100> weight != 75 )**
+
 

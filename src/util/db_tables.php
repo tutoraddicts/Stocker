@@ -13,7 +13,7 @@ abstract class DBTables
     public function &__get($name)
     {
         $return_val = false;
-        if (isset($this->table_datas[$name])) {
+        if (isset ($this->table_datas[$name])) {
             return $this->table_datas[$name];
         }
         return $return_val;
@@ -22,6 +22,69 @@ abstract class DBTables
     public function &Get_All_Data()
     {
         return $this->table_datas;
+    }
+
+    /**
+     * @param array $table_content - Array of table content the attribute type = value which is needed
+     * Example :  
+     * array (
+     *      "user_name" => array(
+     *          "user1" => "=", // value and the needed operator example = for if equal < if lessthan
+     *          "user2" => "="
+     *      )
+     *      "password" => array(
+     *          "password1" => "="
+     *      )
+     *      "user_age" => array(
+     *          
+     *          "24" = ">" // only if the user is greater than 24
+     *      )
+     * )
+     * @return bool - false if query does not run porperly and result if ran successfully
+     */
+    private function CreateQuery($attribute, $value): string
+    {
+        $query = "";
+        if (gettype($value) == "string") {
+            $query .= "$attribute = \"$value\" ";
+            return $query;
+        }elseif (gettype($value) != "array") {
+            $query .= "$attribute = $value ";
+            return $query;
+        }
+
+        $y = 0; //  to check if it is not the last attribute
+        $count_value = count($value);
+
+        foreach ($value as $sub_value => $operator) {
+            if (gettype($operator) == "array") {
+                /**
+                 * "100" => array(
+                 *      "OR/AND" => "<"
+                 * )
+                 * By default the logic will take the sub as OR if you want to specify other Conditon such as AND you can specify here like this
+                */
+                foreach ($operator as $Condition => $_operator) {
+                    $query .= " $Condition $attribute $_operator  \"$sub_value\" ";
+                }
+                ++$y;
+                continue;
+            }
+            // checks if the sub_value type is string if string we will pass the value inside ""
+            else if (gettype($sub_value) == "string") {
+                $query .= "$attribute $operator \"$sub_value\" ";
+            }
+            else {
+                $query .= "$attribute $operator $sub_value ";
+            }
+
+            // Add AND if it's not the last iteration
+            if (++$y !== $count_value) {
+                $query .= " OR ";
+            }
+        }
+
+        return $query;
     }
     /**
      * @param array $table_content - Array of table content
@@ -35,7 +98,6 @@ abstract class DBTables
      *               )
      * @return bool - return string if the query ran correctly
      */
-
     public function Insert(array $table_content)
     {
         global $DB;
@@ -93,28 +155,26 @@ abstract class DBTables
         // SELECT * FROM users WHERE id = 1;
         $tableName = static::class;
         $query = "SELECT * FROM $tableName WHERE ";
-        
+
         $count = count($table_content);
         $i = 0;
 
         foreach ($table_content as $attribute => $value) {
 
-            $y = 0; //  to check if it is not the last attribute
-            $count_value = count($value);
-            $query .= " ( ";
-            foreach ($value as $sub_value => $operator) {
-                // checks if the sub_value type is string if strning we will pass the value inside ""
-                if (gettype($sub_value) == "string") {
-                    $query .= "$attribute $operator \"$sub_value\" ";
-                }else {
-                    $query .= "$attribute $operator $sub_value ";
-                }
-                //  to check if it is not the last attribute
-                if (++$y !== $count_value) {
-                    $query .= " OR ";
-                }
-            }
-            $query .= " ) ";
+            $query .= " ( " . $this->CreateQuery($attribute, $value) . " ) "; 
+            // foreach ($value as $sub_value => $operator) {
+            //     // checks if the sub_value type is string if string we will pass the value inside ""
+            //     if (gettype($sub_value) == "string") {
+            //         $query .= "$attribute $operator \"$sub_value\" ";
+            //     } else {
+            //         $query .= "$attribute $operator $sub_value ";
+            //     }
+            //     //  to check if it is not the last attribute
+            //     if (++$y !== $count_value) {
+            //         $query .= " OR ";
+            //     }
+            // }
+            // $query .= " ) ";
 
             // Add AND if it's not the last iteration
             if (++$i !== $count) {
