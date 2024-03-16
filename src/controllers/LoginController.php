@@ -4,6 +4,7 @@ class LoginController
     public function login($username = null, $password = null)
     {
         global $DB;
+        
 
         if ($username == null || $password == null) { // just the login page where the user will pass username and password 
             $data = array(
@@ -16,7 +17,8 @@ class LoginController
         }else {
             // var_dump($DB->Users);
             // $check_user = $DB->Users->check_user($username,$password);
-            $check_user = $DB->Users->Get(array(
+            $user = new Users();
+            $check_user = $user->Get(array(
                 "user_name" => array (
                     "$username" => "="
                 ),

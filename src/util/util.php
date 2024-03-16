@@ -67,20 +67,10 @@ function getQueries(&$stringofQueries = null): array
     return $result;
 }
 
-
-require_once "Controllers.php";
 require_once "DB.php";
 
 // Starting the Session after including all the files
 session_start();
-
-if (!array_key_exists("Controllers", $_SESSION)) {
-    $_SESSION['Controllers'] = new Controllers();
-} else if ($_SESSION['Controllers'] === null || $config->holdSession === false) {
-    $_SESSION['Controllers'] = new Controllers();
-} else {
-    logconsole("Controllers Object is already created");
-}
 
 if (!array_key_exists("DB", $_SESSION)) {
     $_SESSION['DB'] = new DB();
@@ -113,16 +103,6 @@ function createControllers(): void
         // //logconsole("Registering controller : $controllerName");
         $Controllers->{$controllerName} = $controllerName;
     }
-}
-
-function GetClassName($path)
-{
-    $patten = '/(.*?)\/(.*?).php/';
-    return preg_replace($patten, "\$2", $path);
-    // $ClassName = str_replace("controllers/", "", $path);
-    // $ClassName = str_replace(".php", "", $ClassName);
-
-    // return $ClassName;
 }
 
 /**
@@ -245,3 +225,5 @@ foreach (glob("databases/*.php") as $Controllerfile) {
 
 // Include all controller files
 require_once "request_handler.php";
+
+handleServerRequestes();
