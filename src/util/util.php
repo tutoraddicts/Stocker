@@ -72,19 +72,6 @@ require_once "DB.php";
 // Starting the Session after including all the files
 session_start();
 
-if (!array_key_exists("DB", $_SESSION)) {
-    $_SESSION['DB'] = new DB();
-} else if ($_SESSION['DB'] === null || $config->holdSession === false) {
-    $_SESSION['DB'] = new DB();
-} else {
-    logconsole("DB Object is already created");
-}
-
-
-$Controllers = &$_SESSION['Controllers'];
-$DB = &$_SESSION['DB'];
-
-
 
 function createControllers(): void
 {
@@ -117,7 +104,6 @@ function createObject($ClassName)
 function createDatabses(): void
 {
     global $DB;
-    global $devEnviourment;
 
     $files = glob("databases/*.php");
 
@@ -125,16 +111,7 @@ function createDatabses(): void
         // $replacePattern = . '//(.*?).php/';
         $databaseName = str_replace("databases/", "", $file);
         $databaseName = str_replace(".php", "", $databaseName);
-
-        ////logconsole("Creating Object of Database : $databaseName");
-        // $dabaseTables = json_decode(file_get_contents($file), true);
         $DB->{$databaseName} = new $databaseName();
-        // var_dump( $DB->{$databaseName});
-        // foreach ($dabaseTables as $k => $v) {
-        //     //logconsole("Registering Database : $k");
-        //     $DB->{$k} = $v;
-        // }
-        // Setting Table Attributes
     }
 }
 
@@ -171,7 +148,26 @@ function loadView($viewName, &$data = array(), &$args = array()): void
 
 }
 
+if (!array_key_exists("DB", $_SESSION)) {
+    $_SESSION['DB'] = new DB();
+    createDatabses();
+} else if ($_SESSION['DB'] === null || $config->holdSession === false) {
+    $_SESSION['DB'] = new DB();
+    createDatabses();
+} else {
+    logconsole("DB Object is already created");
+}
+
+$DB = &$_SESSION['DB'];
+
 require_once "db_tables.php";
+foreach (glob("controllers/*.php") as $Controllerfile) { include_once $Controllerfile; }
+foreach (glob("databases/*.php") as $Controllerfile) { include_once $Controllerfile; }
+require_once "request_handler.php";
+
+
+
+handleServerRequestes();
 
 // Strore array("className" => $Object)
 // if (!array_key_exists('C', $_SESSION)) {
@@ -215,15 +211,3 @@ require_once "db_tables.php";
 // }
 // var_dump($_SESSION['C']);
 
-foreach (glob("controllers/*.php") as $Controllerfile) {
-    include_once $Controllerfile;    
-}
-
-foreach (glob("databases/*.php") as $Controllerfile) {
-    include_once $Controllerfile; // This line includes each PHP file from the Controllers directory
-}
-
-// Include all controller files
-require_once "request_handler.php";
-
-handleServerRequestes();
