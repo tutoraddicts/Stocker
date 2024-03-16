@@ -3,7 +3,7 @@
 require_once "util/util.php";
 
 ##NeedOnceInProduction{{
-createControllers();
+// createControllers();
 createDatabses();
 ##NeedOnceInProduction}}
 

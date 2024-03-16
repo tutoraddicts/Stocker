@@ -1,7 +1,7 @@
 <?php
 class LoginController
 {
-    function login($username = null, $password = null)
+    public function login($username = null, $password = null)
     {
         global $DB;
 
@@ -38,7 +38,7 @@ class LoginController
 
     }
 
-    function LogOut() {
+    public function LogOut() {
         session_destroy();
         redirect('./');
     }

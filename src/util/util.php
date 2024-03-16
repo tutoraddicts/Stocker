@@ -1,16 +1,8 @@
 <?php
 
-// Include all controller files
-
-require_once "db_tables.php";
-foreach (glob("controllers/*.php") as $Controllerfile) {
-    include_once $Controllerfile; // This line includes each PHP file from the Controllers directory
-}
-foreach (glob("databases/*.php") as $Controllerfile) {
-    include_once $Controllerfile; // This line includes each PHP file from the Controllers directory
-}
-
 require_once "file_handeler.php";
+
+// session_start();
 
 /*  Some nessesery functions for use  */
 // Get the requested URL
@@ -41,7 +33,7 @@ function getCurrentUrl()
 
 function isUserLoggedin()
 {
-    return isset($_SESSION['user_name']);
+    return isset ($_SESSION['user_name']);
 }
 
 // Get relative URL from absolute URL
@@ -82,7 +74,7 @@ require_once "DB.php";
 // Starting the Session after including all the files
 session_start();
 
-if (!array_key_exists("Controllers", $_SESSION)) { 
+if (!array_key_exists("Controllers", $_SESSION)) {
     $_SESSION['Controllers'] = new Controllers();
 } else if ($_SESSION['Controllers'] === null || $config->holdSession === false) {
     $_SESSION['Controllers'] = new Controllers();
@@ -123,6 +115,25 @@ function createControllers(): void
     }
 }
 
+function GetClassName($path)
+{
+    $patten = '/(.*?)\/(.*?).php/';
+    return preg_replace($patten, "\$2", $path);
+    // $ClassName = str_replace("controllers/", "", $path);
+    // $ClassName = str_replace(".php", "", $ClassName);
+
+    // return $ClassName;
+}
+
+/**
+ * Create Object of the controller and databases
+ * @param string $path - Path of the php file
+ * @return stdclass - object of the class
+ */
+function createObject($ClassName)
+{
+    return new $ClassName();
+}
 function createDatabses(): void
 {
     global $DB;
@@ -180,4 +191,57 @@ function loadView($viewName, &$data = array(), &$args = array()): void
 
 }
 
+require_once "db_tables.php";
+
+// Strore array("className" => $Object)
+// if (!array_key_exists('C', $_SESSION)) {
+//     $seesion_controller_data = array();
+//     foreach (glob("controllers/*.php") as $Controllerfile) {
+//         include_once $Controllerfile; // This line includes each PHP file from the Controllers directory
+//         $className = GetClassName($Controllerfile);
+//         if (class_exists($className)) {
+//             ${$className} = $instance = new $className();
+//             // var_dump($instance);
+//             if (!empty ($instance)) {
+//                 $seesion_controller_data["$Controllerfile"] = array(
+//                     "$className" => $instance
+//                 );
+//                 logconsole("Creating Object of $className");
+//             } else {
+//                 logconsole("Failed to create the Class of $className | because the object is empty");
+//             }
+//         } else {
+//             logconsole("Failed to create the Class of $className | because the class does not exist");
+//         }
+//         // var_dump($_SESSION['C']["$Controllerfile"]);
+//         // echo "\n";
+
+//     }
+
+//     $_SESSION['C'] = $seesion_controller_data;
+// } else {
+//     $controllers = $_SESSION['C'];
+//     foreach ($controllers as $Controllerfile => $classObjects) {
+//         include_once $Controllerfile;
+//         // logconsole("including File $Controllerfile");
+//         // var_dump($classObjects);
+//         foreach ($classObjects as $name => $object) {
+//             ${$name} = $object;
+//             var_dump(${$name});
+//             logconsole("Getting the Controller Object $name");
+//         }
+
+//     }
+// }
+// var_dump($_SESSION['C']);
+
+foreach (glob("controllers/*.php") as $Controllerfile) {
+    include_once $Controllerfile;    
+}
+
+foreach (glob("databases/*.php") as $Controllerfile) {
+    include_once $Controllerfile; // This line includes each PHP file from the Controllers directory
+}
+
+// Include all controller files
 require_once "request_handler.php";

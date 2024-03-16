@@ -19,7 +19,11 @@ How to access the data in html file ?? just use $variable name
 
 class HomeController
 {
-    function index(...$args)
+    public string $temp = "temp data";
+    public function print_temp() {
+        echo "$this->temp \n";
+    }
+    public function index(...$args)
     {
         global $Controllers;
         global $DB;

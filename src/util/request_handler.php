@@ -35,7 +35,14 @@ function handleServerRequestes(): void
 
         // Check if the controller class exists
         if (class_exists($controllerName)) { // Check if the controller class exists
-            $controller = $Controllers->{$controllerName}; // Create an instance of the controller
+            global $config;
+            if ($config->build == false) {
+                ${$controllerName} = new $controllerName();
+            }else {
+                // Will Add this feature later
+                // Load Serialised Object
+            }
+            $controller = &${$controllerName}; // Create an instance of the controller
 
             // Check if the controller method exists
             if (method_exists($controller, $actionName)) { // Check if the method exists in the controller
