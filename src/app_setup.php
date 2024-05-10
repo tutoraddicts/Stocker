@@ -312,7 +312,7 @@ function print_help() {
     echo "Help:\n";
 
     echo "--------------------------\n";
-    echo "-get_all_db_data : get all the Database of tables this command was introduced for testing perpose only\n";
+    echo "-get_all_db_data : get all the Database of tables and Print them in console |  this command was introduced for testing perpose only\n";
     echo "-init_db : Initialise DB and create out Databses\n";
     echo "-update_tables : Update all the tables attributes\n";
     echo "-help : Print Aavailable arguments\n"; 

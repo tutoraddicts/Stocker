@@ -146,9 +146,9 @@ class DB
         //make our sqlQuery to get all the data
         // Storing the object of the Database Tables with there respective names
         //logconsole("Creating DB Object for $table_name");
-        $this->Tables[$table_name] = $value;
+        // $this->Tables[$table_name] = $value;
 
-        // $this->Update_DB($table_name);
+        $this->Update_DB($table_name);
 
     }
 
