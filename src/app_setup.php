@@ -1,5 +1,7 @@
 <?php
 
+require_once(".\util\db_tables.php");
+
 /**
  * This File will handle other Processes which are needed to be done before running the application
  */
