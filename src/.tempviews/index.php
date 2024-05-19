@@ -44,7 +44,7 @@
         <button class="add-product-btn">Add Product</button>
         <button class="bill-product-btn">Bill Product</button>
 
-        <?php if($products): ?> 
+        <?php if(isset($products)): ?> 
 <ul class="product-list"></ul>
         <?php foreach($products as $product_name => $data): ?>
         <li><?php  echo $product_name  ?></li>
@@ -53,8 +53,8 @@
         </ul>
         <?php endif; ?>
 
-
-        <?php switch ($variable): 
+        <?php if(isset($variable)): ?> 
+<?php switch ($variable): 
  case 'value1': ?>        <p>Value 1 is selected</p>
 
         <?php break; ?>
@@ -65,6 +65,7 @@
         <p>None of the predefined values are selected</p>
 
         <?php endswitch; ?>;
+        <?php endif; ?>
     </main>
 </body>
 

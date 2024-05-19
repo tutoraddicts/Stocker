@@ -44,7 +44,7 @@
         <button class="add-product-btn">Add Product</button>
         <button class="bill-product-btn">Bill Product</button>
 
-        @if ($products)
+        @if (isset($products))
         <ul class="product-list"></ul>
         @foreach ($products as $product_name => $data)
         <li>{{ echo $product_name }}</li>
@@ -53,7 +53,7 @@
         </ul>
         @endif
 
-
+        @if(isset($variable))
         @switch ($variable) 
         @case 'value1'
 
@@ -70,6 +70,7 @@
         <p>None of the predefined values are selected</p>
 
         @endswitch;
+        @endif
     </main>
 </body>
 

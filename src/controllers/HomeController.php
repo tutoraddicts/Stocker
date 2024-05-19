@@ -29,7 +29,7 @@ class HomeController
         global $DB;
         // if user not logged in then redirect to different route
         if(!isUserLoggedin()){
-            redirect("login");
+            redirect("login"); // login is the name of the redirect url /redirect
             return;
         }
         // var_dump($DB->Users->{$_SESSION['user_name']});
