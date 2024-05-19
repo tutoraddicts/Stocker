@@ -252,7 +252,7 @@ $DB->Products->Get(array(
     ),
     "weight" => array (
         24 => ">",
-        100 => arraY(
+        100 => array(
             "AND" => "<" 
         ),
         75 => "!="
@@ -260,6 +260,6 @@ $DB->Products->Get(array(
     )
 ));
 ```
-The Query of the above code will be **SELECT * FROM Products WHERE ( products_tag = glass OR products_tag = bottle ) AND ( weight > 24 AND weight < 100> weight != 75 )**
+The Query of the above code will be **SELECT * FROM Products WHERE ( products_tag = glass OR products_tag = bottle ) AND ( weight > 24 AND weight < 100 OR weight != 75 )**
 
 
