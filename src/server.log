@@ -72,3 +72,23 @@ Stack trace:
 [Mon Jun 24 13:35:08 2024] [::1]:65381 Closing
 [Mon Jun 24 13:35:08 2024] [::1]:65382 Accepted
 [Mon Jun 24 13:35:08 2024] [::1]:65382 Closing
+[Mon Jun 24 13:41:17 2024] [::1]:49176 Accepted
+[Mon Jun 24 13:41:17 2024] [::1]:49176 Closing
+[Mon Jun 24 13:41:17 2024] [::1]:49177 Accepted
+[Mon Jun 24 13:41:17 2024] [::1]:49177 Closing
+[Mon Jun 24 13:52:26 2024] [::1]:49526 Accepted
+[Mon Jun 24 13:52:26 2024] PHP Warning:  file_get_contents(../Static/View/login.html): Failed to open stream: No such file or directory in D:\Projects\Stocker\src\util\file_handeler.php on line 51
+[Mon Jun 24 13:52:26 2024] [::1]:49526 Closing
+[Mon Jun 24 13:52:26 2024] [::1]:49527 Accepted
+[Mon Jun 24 13:52:54 2024] PHP Warning:  file_get_contents(D:\Projects\Stocker\src\util/Static/View/login.html): Failed to open stream: No such file or directory in D:\Projects\Stocker\src\util\file_handeler.php on line 51
+[Mon Jun 24 13:52:54 2024] [::1]:49527 Closing
+[Mon Jun 24 13:52:54 2024] [::1]:49549 Accepted
+[Mon Jun 24 13:53:10 2024] PHP Warning:  file_get_contents(D:\Projects\Stocker\src\util\Static\View\login.html): Failed to open stream: No such file or directory in D:\Projects\Stocker\src\util\file_handeler.php on line 51
+[Mon Jun 24 13:53:10 2024] [::1]:49549 Closing
+[Mon Jun 24 13:53:10 2024] [::1]:49560 Accepted
+[Mon Jun 24 13:54:10 2024] [::1]:49560 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Jun 24 13:54:10 2024] [::1]:49560 Closing
+[Mon Jun 24 13:54:10 2024] [::1]:49591 Accepted
+[Mon Jun 24 13:54:10 2024] [::1]:49591 Closing
+[Mon Jun 24 13:54:10 2024] [::1]:49592 Accepted
+[Mon Jun 24 13:54:10 2024] [::1]:49592 Closing
