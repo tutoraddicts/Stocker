@@ -1,0 +1,74 @@
+[Mon Jun 24 13:13:44 2024] PHP 8.2.4 Development Server (http://localhost:8802) started
+[Mon Jun 24 13:13:45 2024] [::1]:64649 Accepted
+[Mon Jun 24 13:13:45 2024] [::1]:64649 Closing
+[Mon Jun 24 13:13:45 2024] [::1]:64650 Accepted
+[Mon Jun 24 13:13:45 2024] [::1]:64652 Accepted
+[Mon Jun 24 13:13:45 2024] [::1]:64653 Accepted
+[Mon Jun 24 13:13:45 2024] [::1]:64650 Closing
+[Mon Jun 24 13:13:45 2024] [::1]:64652 Closing
+[Mon Jun 24 13:13:45 2024] [::1]:64653 Closing
+[Mon Jun 24 13:13:45 2024] [::1]:64654 Accepted
+[Mon Jun 24 13:13:45 2024] [::1]:64654 Closing
+[Mon Jun 24 13:14:01 2024] [::1]:64664 Accepted
+[Mon Jun 24 13:14:01 2024] [::1]:64664 Closing
+[Mon Jun 24 13:14:01 2024] [::1]:64665 Accepted
+[Mon Jun 24 13:14:01 2024] [::1]:64666 Accepted
+[Mon Jun 24 13:14:01 2024] [::1]:64667 Accepted
+[Mon Jun 24 13:14:01 2024] [::1]:64665 Closing
+[Mon Jun 24 13:14:01 2024] [::1]:64666 Closing
+[Mon Jun 24 13:14:01 2024] [::1]:64667 Closing
+[Mon Jun 24 13:14:05 2024] [::1]:64670 Accepted
+[Mon Jun 24 13:14:05 2024] [::1]:64670 Closing
+[Mon Jun 24 13:14:05 2024] [::1]:64671 Accepted
+[Mon Jun 24 13:14:05 2024] PHP Warning:  Undefined array key "DB" in D:\Projects\Stocker\src\util\util.php on line 64
+[Mon Jun 24 13:14:05 2024] [::1]:64671 Closing
+[Mon Jun 24 13:14:05 2024] [::1]:64672 Accepted
+[Mon Jun 24 13:14:05 2024] [::1]:64672 Closing
+[Mon Jun 24 13:14:05 2024] [::1]:64673 Accepted
+[Mon Jun 24 13:14:05 2024] [::1]:64673 Closing
+[Mon Jun 24 13:15:46 2024] [::1]:64722 Accepted
+[Mon Jun 24 13:15:46 2024] [::1]:64722 Closing
+[Mon Jun 24 13:16:12 2024] [::1]:64736 Accepted
+[Mon Jun 24 13:16:12 2024] [::1]:64736 Closing
+[Mon Jun 24 13:17:25 2024] [::1]:64768 Accepted
+[Mon Jun 24 13:17:25 2024] [::1]:64768 Closing
+[Mon Jun 24 13:17:25 2024] [::1]:64770 Accepted
+[Mon Jun 24 13:17:25 2024] [::1]:64770 Closing
+[Mon Jun 24 13:17:42 2024] [::1]:64786 Accepted
+[Mon Jun 24 13:17:42 2024] [::1]:64786 Closing
+[Mon Jun 24 13:17:42 2024] [::1]:64787 Accepted
+[Mon Jun 24 13:17:42 2024] [::1]:64787 Closing
+[Mon Jun 24 13:30:06 2024] [::1]:65212 Accepted
+[Mon Jun 24 13:30:06 2024] PHP Warning:  require_once(D:\Projects\Stocker\src\util/index.php): Failed to open stream: No such file or directory in D:\Projects\Stocker\src\util\request_handler.php on line 16
+[Mon Jun 24 13:30:06 2024] PHP Fatal error:  Uncaught Error: Failed opening required 'D:\Projects\Stocker\src\util/index.php' (include_path='C:\xampp\php\PEAR') in D:\Projects\Stocker\src\util\request_handler.php:16
+Stack trace:
+#0 D:\Projects\Stocker\src\util\util.php(82): require_once()
+#1 {main}
+  thrown in D:\Projects\Stocker\src\util\request_handler.php on line 16
+[Mon Jun 24 13:30:06 2024] [::1]:65212 Closing
+[Mon Jun 24 13:30:06 2024] [::1]:65213 Accepted
+[Mon Jun 24 13:30:45 2024] [::1]:65213 Closing
+[Mon Jun 24 13:30:45 2024] [::1]:65233 Accepted
+[Mon Jun 24 13:30:45 2024] [::1]:65233 Closing
+[Mon Jun 24 13:33:25 2024] [::1]:65318 Accepted
+[Mon Jun 24 13:33:25 2024] [::1]:65318 Closing
+[Mon Jun 24 13:33:25 2024] [::1]:65319 Accepted
+[Mon Jun 24 13:33:25 2024] [::1]:65319 Closing
+[Mon Jun 24 13:34:40 2024] [::1]:65361 Accepted
+[Mon Jun 24 13:34:40 2024] [::1]:65361 Closing
+[Mon Jun 24 13:34:40 2024] [::1]:65362 Accepted
+[Mon Jun 24 13:34:40 2024] [::1]:65362 Closing
+[Mon Jun 24 13:34:40 2024] [::1]:65364 Accepted
+[Mon Jun 24 13:34:40 2024] [::1]:65364 Closing
+[Mon Jun 24 13:34:40 2024] [::1]:65365 Accepted
+[Mon Jun 24 13:34:40 2024] [::1]:65365 Closing
+[Mon Jun 24 13:34:41 2024] [::1]:65366 Accepted
+[Mon Jun 24 13:34:41 2024] [::1]:65366 Closing
+[Mon Jun 24 13:34:41 2024] [::1]:65367 Accepted
+[Mon Jun 24 13:34:41 2024] [::1]:65367 Closing
+[Mon Jun 24 13:35:08 2024] [::1]:65380 Accepted
+[Mon Jun 24 13:35:08 2024] [::1]:65380 Closing
+[Mon Jun 24 13:35:08 2024] [::1]:65381 Accepted
+[Mon Jun 24 13:35:08 2024] [::1]:65381 Closing
+[Mon Jun 24 13:35:08 2024] [::1]:65382 Accepted
+[Mon Jun 24 13:35:08 2024] [::1]:65382 Closing

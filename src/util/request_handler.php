@@ -2,6 +2,51 @@
 
 global $routes;
 global $requestUrl;
+
+/**
+ * Handeling the Css Js Static file structure
+*/
+$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+echo $uri;
+// Serve the requested resource as-is if it exists
+if ($uri !== '/' && file_exists(__DIR__ . $uri)) {
+    return false;
+}
+
+
+
+// Get relative URL from absolute URL
+function getRelativeUrl(&$url): string
+{
+    // echo $_SERVER['DOCUMENT_ROOT'];
+    // echo str_replace("/Stocker/src/", "/", $url);
+    // echo "</br>";
+    return str_replace("/Stocker/src/", "/", $url);
+}
+
+function getQueries(&$stringofQueries = null): array
+{
+
+    $result = [];
+
+    if ($stringofQueries == null) {
+        // Loop through each key-value pair in the $_POST superglobal array
+        foreach ($_POST as $key => $value) {
+            // Add the key-value pair to the $postData array
+            $decodedString = urldecode($value);
+            $result[$key] = $decodedString;
+        }
+    } else {
+        // Decode the URL-encoded string
+        // $decodedString = urldecode($stringofQueries);
+        // Parse the string into an array
+        parse_str($stringofQueries, $result);
+    }
+
+    return $result;
+}
+
+
 // var_dump($requestUrl);
 
 /**
@@ -23,10 +68,13 @@ function handleServerRequestes(): void
 
     // Parse requested URL and queries
     // $tempRequest = explode("?", $requestUrl);
-    $tempRequest = explode("?", getRelativeUrl($requestUrl));
+    // $tempRequest = explode("?", getRelativeUrl($requestUrl));
+    $tempRequest = explode("?", $requestUrl);
     $relativeRequestUrl = $tempRequest[0];
     $relativeQuery = isset($tempRequest[1]) ? getQueries($tempRequest[1]) : getQueries();
 
+    // echo $relativeRequestUrl;
+    logconsole($relativeRequestUrl);
     // Match routes and call associated controller methods
     if (array_key_exists($relativeRequestUrl, $routes)) { // Check if the requested URL matches any defined route
         $routeParts = explode('@', $routes[$relativeRequestUrl]); // Split the controller and method name
@@ -36,12 +84,12 @@ function handleServerRequestes(): void
         // Check if the controller class exists
         if (class_exists($controllerName)) { // Check if the controller class exists
             global $config;
-            if ($config->build == false) {
+            // if ($config->build == false) {
                 ${$controllerName} = new $controllerName();
-            }else {
-                // Will Add this feature later
-                // Load Serialised Object
-            }
+            // }else {
+            //     // Will Add this feature later
+            //     // Load Serialised Object
+            // }
             $controller = &${$controllerName}; // Create an instance of the controller
 
             // Check if the controller method exists
@@ -66,4 +114,12 @@ function handleServerRequestes(): void
         1. Check the routes.joson for any mistake </br>
         2. If you are running the server from root of the src then comment out line no.26 and uncomment line no.25";
     }
+}
+
+// Function to rediredct 
+function redirect($url, $statusCode = 302): void
+{
+    global $requestUrl;
+    header('Location: ' . $url);
+    die();
 }

@@ -1,6 +1,7 @@
 <?php
 
-require_once(".\util\db_tables.php");
+require_once ("./util/db_tables.php");
+require_once ("./util/file_handeler.php");
 
 /**
  * This File will handle other Processes which are needed to be done before running the application
@@ -24,6 +25,16 @@ if ($argc > 1) {
                 break;
             case "-update_tables":
                 update_tables();
+                break;
+            case "-build":
+                printf("building the application");
+                build();
+                break;
+            case "-start":
+                echo "Started Server Creation Process";
+                $i++;
+                start_server($argv[$i]);
+                // $argv[($i + 1)]
                 break;
             case "-help":
                 print_help();
@@ -49,7 +60,6 @@ function connect_to_db()
     // Check connection
     return new mysqli($config->database->host, $config->database->userName, $config->database->password);
 }
-
 
 function alter_db_tables(&$db_connection, &$table_name, &$table_columns)
 {
@@ -204,7 +214,7 @@ function get_db_tables(): array
         $table_name = str_replace("databases/", "", $table);
         $table_name = str_replace(".php", "", $table_name);
 
-        include_once($table);
+        include_once ($table);
 
         $temp_table = new $table_name();
         $array_of_tables[$table_name] = $temp_table->{$table_name};
@@ -310,12 +320,134 @@ function get_all_db_data()
     }
 }
 
-function print_help() {
+function copyDirectory($source, $destination)
+{
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
+    }
+
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::SELF_FIRST
+    );
+
+    foreach ($iterator as $item) {
+        $destPath = $destination . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
+        if ($item->isDir()) {
+            if (!file_exists($destPath)) {
+                mkdir($destPath, 0755, true);
+            }
+        } else {
+            copy($item, $destPath);
+        }
+    }
+}
+
+function deleteDirectory($dir)
+{
+    if (!file_exists($dir)) {
+        return false;
+    }
+
+    if (!is_dir($dir)) {
+        return unlink($dir); // Delete the file if it's not a directory
+    }
+
+    $files = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+
+    foreach ($files as $fileinfo) {
+        $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
+        $todo($fileinfo->getRealPath());
+    }
+
+    return rmdir($dir); // Remove the parent directory
+}
+
+function build(): void
+{
+    global $config;
+
+    if ($config->build == true) {
+        echo "You are currently in build directory | Skipping build process";
+        exit -1;
+    }
+    $build_dir = "../build";
+    // This Function will build the application
+
+    deleteDirectory($build_dir);
+
+    // Create build folder outside the src directory
+    if (!file_exists($build_dir)) {
+        mkdir($build_dir); // Creates a new directory with the specified name
+        echo "Directory '$build_dir' created successfully.";
+    } else {
+        echo "Directory '$build_dir' already exists.";
+    }
+
+    // Copy all the files and folder in to build directory
+    $sourceDir = getcwd(); // Current directory
+    copyDirectory($sourceDir, $build_dir);
+
+    // Generate php files
+    $iterator = new DirectoryIterator("$build_dir/Static/view");
+
+    foreach ($iterator as $fileInfo) {
+        if (!$fileInfo->isDot()) {
+            $processedHtml = processHTMLFile("$build_dir/Static/view/" . $fileInfo->getFilename());
+            unlink("$build_dir/Static/View/" . $fileInfo->getFilename());
+            file_put_contents("$build_dir/Static/view/" . $fileInfo->getFilename() . ".php", $processedHtml);
+        }
+    }
+
+    deleteDirectory("$build_dir/.tempviews");
+
+    //  Change Build Flag
+    $config = json_decode(file_get_contents("$build_dir/config.json"), false);
+    $config->build = true;
+    file_put_contents("$build_dir/config.json" ,json_encode($config));
+
+}
+
+function start_server($port): void
+{
+    //  Start the server in port $port
+    echo "Determining Port number: $port";
+    // Set the address and port
+    $address = 'localhost';
+    if ($port == null) {
+        global $config;
+
+        if($config->build == true ) {
+            $port = 80;
+        }else {
+            $port = 8080;
+        }
+    }
+
+    echo "Port number Determined: $port \n";
+    // Command to start the PHP built-in server
+    echo "Server started at http://$address:$port \n";
+
+    // Execute the command
+    $pid = shell_exec("php -S $address:$port ./util/util.php > server.log 2>&1");
+
+    echo "Server started at http://$address:$port with PID $pid\n";
+
+    
+}
+
+function print_help()
+{
     echo "Help:\n";
 
     echo "--------------------------\n";
     echo "-get_all_db_data : get all the Database of tables and Print them in console |  this command was introduced for testing perpose only\n";
     echo "-init_db : Initialise DB and create out Databses\n";
     echo "-update_tables : Update all the tables attributes\n";
-    echo "-help : Print Aavailable arguments\n"; 
+    echo "-build : build the appliation | this build mode will improve the application performance for bigger websites";
+    echo "-start : Start a Server in the port user mentioned | Example -start <port_number>";
+    echo "-help : Print Aavailable arguments\n";
 }

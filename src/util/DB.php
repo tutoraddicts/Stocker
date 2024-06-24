@@ -34,7 +34,10 @@ class DB
 
         // Check connection
         if ($this->dbConnection->connect_error) {
-            //logconsole("Connection failed: " . $this->dbConnection->connect_error);
+            if ($config->errorShow) {
+                echo $this->dbConnection->connect_error;
+            }
+            logconsole("Connection failed: " . $this->dbConnection->connect_error);
             return false;
         } else {
             //logconsole("Connected successfully");
