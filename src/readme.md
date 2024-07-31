@@ -26,47 +26,48 @@
 
 ## Folder Tree
 
-└───src
-
-    │   .htaccess
-    │   app_setup.php
-    │   config.json
-    │   index.php
-    │   readme.md
-    │   routes.json
-    │
-    ├───.tempviews
-    │       index.php
-    │       login.php
-    │       register.php
-    │
-    ├───controllers
-    │       HomeController.php
-    │       LoginController.php
-    │       RegisterController.php
-    │
-    ├───databases
-    │       Products.php
-    │       Users.php
-    │
-    ├───static
-    │   ├───styles
-    │   │       login.css
-    │   │       main.css
-    │   │
-    │   └───view
-    │           index.html
-    │           login.html
-    │           register.html
-    │
-    └───util
-            Controllers.php
-            DB.php
-            db_tables.php
-            demo.php.backup
-            file_handeler.php
-            request_handler.php
-            util.php
+```plaintext
+src
+│   .htaccess
+│   app_setup.php
+│   config.json
+│   index.php
+│   readme.md
+│   routes.json
+│
+├───.tempviews
+│       index.php
+│       login.php
+│       register.php
+│
+├───controllers
+│       HomeController.php
+│       LoginController.php
+│       RegisterController.php
+│
+├───databases
+│       Products.php
+│       Users.php
+│
+├───static
+│   ├───styles
+│   │       login.css
+│   │       main.css
+│   │
+│   └───view
+│           index.html
+│           login.html
+│           register.html
+│
+└───util
+        Controllers.php
+        DB.php
+        db_tables.php
+        demo.php.backup
+        file_handeler.php
+        request_handler.php
+        util.php
+```
 
 ## Routing
 

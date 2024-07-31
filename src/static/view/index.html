@@ -45,7 +45,7 @@
         <button class="add-product-btn">Add Product</button>
         <button class="bill-product-btn">Bill Product</button>
 
-        @if (isset($products))
+        @if (isset($products) && $products != null)
         <ul class="product-list"></ul>
         @foreach ($products as $product_name => $data)
         <li>{{ echo $data["productName"] }}</li>
