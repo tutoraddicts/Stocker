@@ -65,9 +65,9 @@ function handleServerRequestes(): void
     // By default the class will be in index number 1 later on it will be functions means index 2 will be function name
 
 
-    $controllerName = $reuquested_methods[1]; // Get the controller name
+    $controllerName = $reuquested_methods[1] != "" ? $reuquested_methods[1] : ($config->defaultController != "" ? $config->defaultController : ""); // Get the controller name
     $controllerClassName = "{$controllerName}Controller";
-    $actionName =(isset($reuquested_methods[2]) && $reuquested_methods[2] != "") ? $reuquested_methods[2] : ($controllerName != "" ? $controllerName : "Controller");
+    $actionName =(isset($reuquested_methods[2]) && $reuquested_methods[2] != "") ? $reuquested_methods[2] : ($controllerName != "" ? $controllerName : ( $config->defaultController != "" ? $config->defaultController : "Controller") );
     // $test = isset($reuquested_methods[2]) && $reuquested_methods[2] != "";
     // logconsole("user requested action is : ({$reuquested_methods[2]}) -- $test -- $actionName" );
 

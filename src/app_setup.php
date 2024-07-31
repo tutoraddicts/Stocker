@@ -39,6 +39,12 @@ if ($argc > 1) {
             case "-help":
                 print_help();
                 break;
+            case "-newController":
+                CreateController($argv[++$i]);
+                break;
+            case "-removeController":
+                RemoveController($argv[++$i]);
+                break;
             default:
                 echo "The value is neither 1, 2, nor 3 you inserted $argv[$i]";
                 print_help();
@@ -320,6 +326,29 @@ function get_all_db_data()
     }
 }
 
+/**
+ * Check if a file exists and delete it.
+ *
+ * @param string $filePath The path to the file to be checked and deleted.
+ * @return bool Returns true if the file was successfully deleted, false otherwise.
+ */
+function deleteFileIfExists($filePath) {
+    // Check if the file exists
+    if (file_exists($filePath)) {
+        // Attempt to delete the file
+        if (unlink($filePath)) {
+            // File successfully deleted
+            return true;
+        } else {
+            // File deletion failed
+            return false;
+        }
+    } else {
+        // File does not exist
+        return false;
+    }
+}
+
 function copyDirectory($source, $destination)
 {
     if (!file_exists($destination)) {
@@ -372,7 +401,7 @@ function build(): void
 
     if ($config->build == true) {
         echo "You are currently in build directory | Skipping build process";
-        exit -1;
+        exit - 1;
     }
     $build_dir = "../build";
     // This Function will build the application
@@ -407,7 +436,7 @@ function build(): void
     //  Change Build Flag
     $config = json_decode(file_get_contents("$build_dir/config.json"), false);
     $config->build = true;
-    file_put_contents("$build_dir/config.json" ,json_encode($config));
+    file_put_contents("$build_dir/config.json", json_encode($config));
 
 }
 
@@ -420,9 +449,9 @@ function start_server($port): void
     if ($port == null) {
         global $config;
 
-        if($config->build == true ) {
+        if ($config->build == true) {
             $port = 80;
-        }else {
+        } else {
             $port = 8080;
         }
     }
@@ -436,8 +465,130 @@ function start_server($port): void
 
     echo "Server started at http://$address:$port with PID $pid\n";
 
-    
+
 }
+
+/**
+ * Create a new controller with basic needs of a controller and created a view for it
+ */
+function CreateController(string $controllerName)
+{
+    $file_name = "{$controllerName}Controller.php";
+    $controllerLocation = "controllers";
+
+    $controller_content = "<?php
+    class {$controllerName}Controller
+    {
+        public function $controllerName(...\$args)
+        {
+        // do the action here 
+        // rather than \$args you can also mention variables which you are passing via URL POST or GET both will work example you are passing a product name then you can memtiom
+        // public function $controllerName(\$product_name, ...\$args)
+
+        \$data = [
+            \"sampledata\" => \"sample data content of $controllerName\",
+        ];
+
+        loadView(
+            \"$controllerName\",
+            \$data,
+            \$args
+        );
+        }
+
+    }
+    ";
+
+    if (file_put_contents("$controllerLocation/$file_name", $controller_content)) {
+        echo "Successfully Created the Cntroller in $controllerLocation/$file_name";
+    }
+
+    $view_file_name = "{$controllerName}.html";
+    $view_location = "Static/view";
+
+    $view_content = "
+<!DOCTYPE html>
+<html lang=\"en\">
+
+<head>
+    <meta charset=\"UTF-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <title>{{echo \"$controllerName\"}}</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"Static/Styles/$controllerName.css\">
+</head>
+
+<body>
+{{ echo \$sampledata }}
+</body>
+
+<script src=\"Static/js/$controllerName.js\"></script>
+
+</html>
+    ";
+
+    if (file_put_contents("$view_location/$view_file_name", $view_content)) {
+        echo "Successfully Created the View for $controllerName \n";
+    }
+
+    $css_file_name = "{$controllerName}.css";
+    $css_file_location = "Static/styles";
+
+    $css_content = "
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff; /* white background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+    ";
+
+    if (file_put_contents("$css_file_location/$css_file_name", $css_content)) {
+        echo "Successfully Created the Css for $controllerName \n";
+    }
+
+    $js_file_name = "{$controllerName}.js";
+    $js_file_location = "Static/js";
+
+    $js_content = "
+    console.log(\"$controllerName Controller Js\");
+    ";
+
+    if (file_put_contents("$js_file_location/$js_file_name", $js_content)) {
+        echo "Successfully Created the js for $controllerName \n";
+    }
+
+}
+
+/**
+ * Function to Delete all the Controller Related Files
+ */
+function RemoveController(string $controllerName) {
+
+    echo "Removing Controller - $controllerName\n";
+    $file_name = "{$controllerName}Controller.php";
+    $controllerLocation = "controllers";
+    deleteFileIfExists("$controllerLocation/$file_name");
+
+    echo "Removing View - $controllerName\n";
+    $view_file_name = "{$controllerName}.html";
+    $view_location = "Static/view";
+    deleteFileIfExists("$view_location/$view_file_name");
+
+    echo "Removing Style - $controllerName\n";
+    $css_file_name = "{$controllerName}.css";
+    $css_file_location = "Static/styles";
+    deleteFileIfExists("$css_file_location/$css_file_name");
+
+    echo "Removing js - $controllerName\n";
+    $js_file_name = "{$controllerName}.js";
+    $js_file_location = "Static/js";
+    deleteFileIfExists("$js_file_location/$js_file_name");
+}
+
 
 function print_help()
 {
@@ -447,7 +598,9 @@ function print_help()
     echo "-get_all_db_data : get all the Database of tables and Print them in console |  this command was introduced for testing perpose only\n";
     echo "-init_db : Initialise DB and create out Databses\n";
     echo "-update_tables : Update all the tables attributes\n";
-    echo "-build : build the appliation | this build mode will improve the application performance for bigger websites";
-    echo "-start : Start a Server in the port user mentioned | Example -start <port_number>";
+    echo "-build : build the appliation | this build mode will improve the application performance for bigger websites\n";
+    echo "-start : Start a Server in the port user mentioned | Example -start <port_number>\n";
+    echo "-newController <controller_name> | create a new controller under controllers folder";
+    echo "-removeController <controller_name> | to remove all the controller files";
     echo "-help : Print Aavailable arguments\n";
 }
