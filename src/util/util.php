@@ -1,5 +1,9 @@
 <?php
 
+if (preg_match('/\.(?:png|jpg|jpeg|gif|css|js)$/', $_SERVER["REQUEST_URI"])) {
+    return false; // Serve the requested resource as-is.
+}
+
 session_start();
 
 require_once "file_handeler.php";
@@ -66,6 +70,7 @@ function createObject($ClassName)
 foreach (glob("controllers/*.php") as $Controllerfile) { include_once $Controllerfile; }
 foreach (glob("databases/*.php") as $Controllerfile) { include_once $Controllerfile; }
 require_once "request_handler.php";
+
 
 
 // echo "testing";
