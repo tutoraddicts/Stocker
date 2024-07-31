@@ -15,9 +15,9 @@ abstract class DB
         $this->connect_to_DB();
         $this->table_structure_var = &$this->{$this->tableName};         // Empty the Variable Datas
 
-        foreach ($this->table_structure_var as $index => $value) {
-            $this->table_structure_var[$index] = "";
-        }
+        // foreach ($this->table_structure_var as $index => $value) {
+        //     $this->table_structure_var[$index] = "";
+        // }
     }
 
     public function __set($index, $value)

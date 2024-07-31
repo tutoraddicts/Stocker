@@ -1,6 +1,6 @@
 <?php
 
-// require_once ("./util/db_tables.php");
+require_once ("./util/DB.php");
 require_once ("./util/file_handeler.php");
 
 /**
@@ -45,6 +45,12 @@ if ($argc > 1) {
             case "-removeController":
                 RemoveController($argv[++$i]);
                 break;
+            case "-create_db_table":
+                CreateDBTable($argv[++$i]);
+                break;
+            case "-remove_db_table":
+                RemoveDBTable($argv[++$i]);
+                break;
             default:
                 echo "The value is neither 1, 2, nor 3 you inserted $argv[$i]";
                 print_help();
@@ -53,6 +59,11 @@ if ($argc > 1) {
     }
 } else {
     echo "No command line arguments provided.\n";
+}
+
+function waitForEnter() {
+    // Read user input from the command line
+    fgets(STDIN);
 }
 
 /**
@@ -64,7 +75,7 @@ function connect_to_db()
 
     global $config;
     // Check connection
-    return new mysqli($config->database->host, $config->database->userName, $config->database->password);
+    return new mysqli($config->database->host, $config->database->userName, $config->database->password, $config->database->db);
 }
 
 function alter_db_tables(&$db_connection, &$table_name, &$table_columns)
@@ -146,13 +157,15 @@ function alter_db_tables(&$db_connection, &$table_name, &$table_columns)
 
 function setup_db(&$db_connection = null, $db_name): bool
 {
+    global $config;
+
     /**
      * Create Database if not there already
      * @param mysqli $db_connection - connection object if the db
      * @param string $db_name - database name which to create
      */
     if ($db_connection == null) {
-        $db_connection = connect_to_db();
+        $db_connection = new mysqli($config->database->host, $config->database->userName, $config->database->password);
     }
 
 
@@ -190,10 +203,11 @@ function create_db_table(&$db_connection, &$table_name, &$table_columns): bool
 
     // k for key v for value
     foreach ($table_columns as $k => $v) {
-        $temp_query = $temp_query . ",$k $v";
+        $temp_query .= ",$k $v";
     }
 
-    $temp_query = $temp_query . ")";
+    $temp_query .= " )";
+    echo "Query to create table $temp_query";
 
     if ($db_connection->query($temp_query)) {
         echo "Table ($table_name) is successfully created\n";
@@ -211,14 +225,14 @@ function get_db_tables(): array
 
     $tables = glob("databases/*.php");
 
-    $array_of_tables = array();
+    $array_of_tables = [];
 
     // table is the path of the database.php files
     foreach ($tables as $table) {
         global $array_of_tables;
         // $replacePattern = . '//(.*?).php/';
         $table_name = str_replace("databases/", "", $table);
-        $table_name = str_replace(".php", "", $table_name);
+        $table_name = str_replace(".table.php", "", $table_name);
 
         include_once ($table);
 
@@ -244,22 +258,23 @@ function init_db(): void
 
     global $config;
 
-    $db_connection = connect_to_db();
-    ;
-
-    if ($db_connection == null) {
-        echo "Failed to setup DataBase\n";
-        return;
-    }
-
     if (!setup_db($db_connection, $config->database->db)) {
         echo "Failed on DB Creation : (" . $config->database->db . ")";
         return;
     }
 
+    $db_connection = connect_to_db();
+
+    if ($db_connection) {
+        echo "SuccessFully Connect to the Databse";
+    }else {
+        echo "Some error happens not able to connect to databse";
+        return;
+    }
 
     // Getting array of tables and table objects
     $tables = get_db_tables();
+    var_dump($tables);
 
     foreach ($tables as $table_name => $table_columns) {
         create_db_table($db_connection, $table_name, $table_columns);
@@ -589,6 +604,53 @@ function RemoveController(string $controllerName) {
     deleteFileIfExists("$js_file_location/$js_file_name");
 }
 
+/**
+ * Function to Create a basic table file in the Databses folder and ask the user to update that and update the databse
+ */
+function CreateDBTable (string $table_name) {
+    $table_file_name = "$table_name.table.php";
+    $table_location = "databases";
+
+    $table_content = "
+<?php
+class $table_name extends DB
+{
+    public \$$table_name = array(
+        \"{$table_name}_name\" => \"VARCHAR(30)\",
+    );
+}
+
+    ";
+
+    if (file_put_contents("$table_location/$table_file_name", $table_content)) {
+        echo "Successfully Created the DB Table Record in $table_location/$table_file_name \n";
+    }
+
+    echo "Please check the file $table_location/$table_file_name and Update Table Structure as needed. in the varaible $table_name\n";
+    echo " Then Press Enter to continue....\n";
+    waitForEnter();
+    echo "Upating Databse Tables \n";
+
+    init_db();
+
+}
+
+function RemoveDBTable (string $table_name) {
+
+    echo "Are you sure to delete the Table - $table_name\n";
+    echo "Be aware that all the the data will be removed from the databse\n";
+    echo "Press Enter if you want to continue......\n";
+    waitForEnter();
+
+    echo "Removing DB Table - $table_name\n";
+    $table_file_name = "$table_name.table.php";
+    $table_location = "databases";
+    deleteFileIfExists("$table_location/$table_file_name");
+
+    $databse = connect_to_db();
+
+    $databse->query("DROP TABLE $table_name");
+}
 
 function print_help()
 {
