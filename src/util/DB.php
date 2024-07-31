@@ -29,7 +29,7 @@ abstract class DB
     {
         global $config;
         // Create connection
-        $this->connection = new mysqli($config->database->host, $config->database->userName, $config->database->password);
+        $this->connection = new mysqli($config->database->host, $config->database->userName, $config->database->password, $config->database->db);
 
         // Check connection
         if ($this->connection->connect_error) {

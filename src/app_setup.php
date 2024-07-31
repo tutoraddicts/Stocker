@@ -39,10 +39,10 @@ if ($argc > 1) {
             case "-help":
                 print_help();
                 break;
-            case "-newController":
+            case "-new_controller":
                 CreateController($argv[++$i]);
                 break;
-            case "-removeController":
+            case "-remove_controller":
                 RemoveController($argv[++$i]);
                 break;
             case "-create_db_table":
@@ -662,7 +662,9 @@ function print_help()
     echo "-update_tables : Update all the tables attributes\n";
     echo "-build : build the appliation | this build mode will improve the application performance for bigger websites\n";
     echo "-start : Start a Server in the port user mentioned | Example -start <port_number>\n";
-    echo "-newController <controller_name> | create a new controller under controllers folder";
-    echo "-removeController <controller_name> | to remove all the controller files";
+    echo "-new_controller <controller_name> | create a new controller under controllers folder";
+    echo "-remove_controller <controller_name> | to remove all the controller files";
+    echo "-create_db_table <table_name> | create a new table record in code under databases and create the table";
+    echo "-remove_db_table <table_name> | remove a table record in code under databases and drop the table in databse";
     echo "-help : Print Aavailable arguments\n";
 }
