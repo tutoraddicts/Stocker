@@ -1,12 +1,14 @@
 {
     "build": false,
+    "errorShow": true,
 
     "database": {
         "host" : "localhost",
-        "db" : "stocker",
+        "db" : "tortois",
         "userName": "stocker",
         "password": "P@ssw0rd#St0cker"
     },
 
-    "holdSession" : true
+    "holdSession" : true,
+    "defaultController": "home"
 }

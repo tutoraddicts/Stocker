@@ -11,7 +11,7 @@
 <body>
 
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>Register</h2>
         <form action="" method="post">
             <input type="text" name="username" placeholder="Username*" required><br>
             <input type="password" name="password" placeholder="Password*" required><br>
@@ -19,8 +19,9 @@
             <input type="text" name="first_name" placeholder="First Name*" required><br>
             <input type="text" name="last_name" placeholder="Last Name*" required><br>
             <input type="text" name="secondary_email" placeholder="Secendary Eamil ID" ><br>
-            <input type="submit" value="Login">
-            <a href="login/register"><input type="button" value="Register"></a>
+            <!-- <input type="submit" value="Login"> -->
+            <input type="submit" value="Register">
+            <!-- <a href="/register"><input type="button" value="Register"></a> -->
         </form>
     </div>
 

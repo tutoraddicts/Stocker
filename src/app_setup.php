@@ -1,6 +1,7 @@
 <?php
 
-require_once(".\util\db_tables.php");
+require_once ("./util/DB.php");
+require_once ("./util/file_handeler.php");
 
 /**
  * This File will handle other Processes which are needed to be done before running the application
@@ -25,8 +26,30 @@ if ($argc > 1) {
             case "-update_tables":
                 update_tables();
                 break;
+            case "-build":
+                printf("building the application");
+                build();
+                break;
+            case "-start":
+                echo "Started Server Creation Process";
+                $i++;
+                start_server($argv[$i]);
+                // $argv[($i + 1)]
+                break;
             case "-help":
                 print_help();
+                break;
+            case "-new_controller":
+                CreateController($argv[++$i]);
+                break;
+            case "-remove_controller":
+                RemoveController($argv[++$i]);
+                break;
+            case "-create_db_table":
+                CreateDBTable($argv[++$i]);
+                break;
+            case "-remove_db_table":
+                RemoveDBTable($argv[++$i]);
                 break;
             default:
                 echo "The value is neither 1, 2, nor 3 you inserted $argv[$i]";
@@ -38,6 +61,11 @@ if ($argc > 1) {
     echo "No command line arguments provided.\n";
 }
 
+function waitForEnter() {
+    // Read user input from the command line
+    fgets(STDIN);
+}
+
 /**
  * Connect to the database
  * @return mixed mysqli|null
@@ -47,9 +75,8 @@ function connect_to_db()
 
     global $config;
     // Check connection
-    return new mysqli($config->database->host, $config->database->userName, $config->database->password);
+    return new mysqli($config->database->host, $config->database->userName, $config->database->password, $config->database->db);
 }
-
 
 function alter_db_tables(&$db_connection, &$table_name, &$table_columns)
 {
@@ -130,13 +157,15 @@ function alter_db_tables(&$db_connection, &$table_name, &$table_columns)
 
 function setup_db(&$db_connection = null, $db_name): bool
 {
+    global $config;
+
     /**
      * Create Database if not there already
      * @param mysqli $db_connection - connection object if the db
      * @param string $db_name - database name which to create
      */
     if ($db_connection == null) {
-        $db_connection = connect_to_db();
+        $db_connection = new mysqli($config->database->host, $config->database->userName, $config->database->password);
     }
 
 
@@ -174,10 +203,11 @@ function create_db_table(&$db_connection, &$table_name, &$table_columns): bool
 
     // k for key v for value
     foreach ($table_columns as $k => $v) {
-        $temp_query = $temp_query . ",$k $v";
+        $temp_query .= ",$k $v";
     }
 
-    $temp_query = $temp_query . ")";
+    $temp_query .= " )";
+    echo "Query to create table $temp_query";
 
     if ($db_connection->query($temp_query)) {
         echo "Table ($table_name) is successfully created\n";
@@ -195,16 +225,16 @@ function get_db_tables(): array
 
     $tables = glob("databases/*.php");
 
-    $array_of_tables = array();
+    $array_of_tables = [];
 
     // table is the path of the database.php files
     foreach ($tables as $table) {
         global $array_of_tables;
         // $replacePattern = . '//(.*?).php/';
         $table_name = str_replace("databases/", "", $table);
-        $table_name = str_replace(".php", "", $table_name);
+        $table_name = str_replace(".table.php", "", $table_name);
 
-        include_once($table);
+        include_once ($table);
 
         $temp_table = new $table_name();
         $array_of_tables[$table_name] = $temp_table->{$table_name};
@@ -228,22 +258,23 @@ function init_db(): void
 
     global $config;
 
-    $db_connection = connect_to_db();
-    ;
-
-    if ($db_connection == null) {
-        echo "Failed to setup DataBase\n";
-        return;
-    }
-
     if (!setup_db($db_connection, $config->database->db)) {
         echo "Failed on DB Creation : (" . $config->database->db . ")";
         return;
     }
 
+    $db_connection = connect_to_db();
+
+    if ($db_connection) {
+        echo "SuccessFully Connect to the Databse";
+    }else {
+        echo "Some error happens not able to connect to databse";
+        return;
+    }
 
     // Getting array of tables and table objects
     $tables = get_db_tables();
+    var_dump($tables);
 
     foreach ($tables as $table_name => $table_columns) {
         create_db_table($db_connection, $table_name, $table_columns);
@@ -310,12 +341,330 @@ function get_all_db_data()
     }
 }
 
-function print_help() {
+/**
+ * Check if a file exists and delete it.
+ *
+ * @param string $filePath The path to the file to be checked and deleted.
+ * @return bool Returns true if the file was successfully deleted, false otherwise.
+ */
+function deleteFileIfExists($filePath) {
+    // Check if the file exists
+    if (file_exists($filePath)) {
+        // Attempt to delete the file
+        if (unlink($filePath)) {
+            // File successfully deleted
+            return true;
+        } else {
+            // File deletion failed
+            return false;
+        }
+    } else {
+        // File does not exist
+        return false;
+    }
+}
+
+function copyDirectory($source, $destination)
+{
+    if (!file_exists($destination)) {
+        mkdir($destination, 0755, true);
+    }
+
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::SELF_FIRST
+    );
+
+    foreach ($iterator as $item) {
+        $destPath = $destination . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
+        if ($item->isDir()) {
+            if (!file_exists($destPath)) {
+                mkdir($destPath, 0755, true);
+            }
+        } else {
+            copy($item, $destPath);
+        }
+    }
+}
+
+function deleteDirectory($dir)
+{
+    if (!file_exists($dir)) {
+        return false;
+    }
+
+    if (!is_dir($dir)) {
+        return unlink($dir); // Delete the file if it's not a directory
+    }
+
+    $files = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+
+    foreach ($files as $fileinfo) {
+        $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
+        $todo($fileinfo->getRealPath());
+    }
+
+    return rmdir($dir); // Remove the parent directory
+}
+
+function build(): void
+{
+    global $config;
+
+    if ($config->build == true) {
+        echo "You are currently in build directory | Skipping build process";
+        exit - 1;
+    }
+    $build_dir = "../build";
+    // This Function will build the application
+
+    deleteDirectory($build_dir);
+
+    // Create build folder outside the src directory
+    if (!file_exists($build_dir)) {
+        mkdir($build_dir); // Creates a new directory with the specified name
+        echo "Directory '$build_dir' created successfully.";
+    } else {
+        echo "Directory '$build_dir' already exists.";
+    }
+
+    // Copy all the files and folder in to build directory
+    $sourceDir = getcwd(); // Current directory
+    copyDirectory($sourceDir, $build_dir);
+
+    // Generate php files
+    $iterator = new DirectoryIterator("$build_dir/Static/view");
+
+    foreach ($iterator as $fileInfo) {
+        if (!$fileInfo->isDot()) {
+            $processedHtml = processHTMLFile("$build_dir/Static/view/" . $fileInfo->getFilename());
+            unlink("$build_dir/Static/View/" . $fileInfo->getFilename());
+            file_put_contents("$build_dir/Static/view/" . $fileInfo->getFilename() . ".php", $processedHtml);
+        }
+    }
+
+    deleteDirectory("$build_dir/.tempviews");
+
+    //  Change Build Flag
+    $config = json_decode(file_get_contents("$build_dir/config.json"), false);
+    $config->build = true;
+    file_put_contents("$build_dir/config.json", json_encode($config));
+
+}
+
+function start_server($port): void
+{
+    //  Start the server in port $port
+    echo "Determining Port number: $port";
+    // Set the address and port
+    $address = 'localhost';
+    if ($port == null) {
+        global $config;
+
+        if ($config->build == true) {
+            $port = 80;
+        } else {
+            $port = 8080;
+        }
+    }
+
+    echo "Port number Determined: $port \n";
+    // Command to start the PHP built-in server
+    echo "Server started at http://$address:$port \n";
+
+    // Execute the command
+    $pid = shell_exec("php -S $address:$port ./util/util.php > server.log 2>&1");
+
+    echo "Server started at http://$address:$port with PID $pid\n";
+
+
+}
+
+/**
+ * Create a new controller with basic needs of a controller and created a view for it
+ */
+function CreateController(string $controllerName)
+{
+    $file_name = "{$controllerName}Controller.php";
+    $controllerLocation = "controllers";
+
+    $controller_content = "<?php
+    class {$controllerName}Controller
+    {
+        public function $controllerName(...\$args)
+        {
+        // do the action here 
+        // rather than \$args you can also mention variables which you are passing via URL POST or GET both will work example you are passing a product name then you can memtiom
+        // public function $controllerName(\$product_name, ...\$args)
+
+        \$data = [
+            \"sampledata\" => \"sample data content of $controllerName\",
+        ];
+
+        loadView(
+            \"$controllerName\",
+            \$data,
+            \$args
+        );
+        }
+
+    }
+    ";
+
+    if (file_put_contents("$controllerLocation/$file_name", $controller_content)) {
+        echo "Successfully Created the Cntroller in $controllerLocation/$file_name";
+    }
+
+    $view_file_name = "{$controllerName}.html";
+    $view_location = "Static/view";
+
+    $view_content = "
+<!DOCTYPE html>
+<html lang=\"en\">
+
+<head>
+    <meta charset=\"UTF-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <title>{{echo \"$controllerName\"}}</title>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"Static/Styles/$controllerName.css\">
+</head>
+
+<body>
+{{ echo \$sampledata }}
+</body>
+
+<script src=\"Static/js/$controllerName.js\"></script>
+
+</html>
+    ";
+
+    if (file_put_contents("$view_location/$view_file_name", $view_content)) {
+        echo "Successfully Created the View for $controllerName \n";
+    }
+
+    $css_file_name = "{$controllerName}.css";
+    $css_file_location = "Static/styles";
+
+    $css_content = "
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff; /* white background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+    ";
+
+    if (file_put_contents("$css_file_location/$css_file_name", $css_content)) {
+        echo "Successfully Created the Css for $controllerName \n";
+    }
+
+    $js_file_name = "{$controllerName}.js";
+    $js_file_location = "Static/js";
+
+    $js_content = "
+    console.log(\"$controllerName Controller Js\");
+    ";
+
+    if (file_put_contents("$js_file_location/$js_file_name", $js_content)) {
+        echo "Successfully Created the js for $controllerName \n";
+    }
+
+}
+
+/**
+ * Function to Delete all the Controller Related Files
+ */
+function RemoveController(string $controllerName) {
+
+    echo "Removing Controller - $controllerName\n";
+    $file_name = "{$controllerName}Controller.php";
+    $controllerLocation = "controllers";
+    deleteFileIfExists("$controllerLocation/$file_name");
+
+    echo "Removing View - $controllerName\n";
+    $view_file_name = "{$controllerName}.html";
+    $view_location = "Static/view";
+    deleteFileIfExists("$view_location/$view_file_name");
+
+    echo "Removing Style - $controllerName\n";
+    $css_file_name = "{$controllerName}.css";
+    $css_file_location = "Static/styles";
+    deleteFileIfExists("$css_file_location/$css_file_name");
+
+    echo "Removing js - $controllerName\n";
+    $js_file_name = "{$controllerName}.js";
+    $js_file_location = "Static/js";
+    deleteFileIfExists("$js_file_location/$js_file_name");
+}
+
+/**
+ * Function to Create a basic table file in the Databses folder and ask the user to update that and update the databse
+ */
+function CreateDBTable (string $table_name) {
+    $table_file_name = "$table_name.table.php";
+    $table_location = "databases";
+
+    $table_content = "
+<?php
+class $table_name extends DB
+{
+    public \$$table_name = array(
+        \"{$table_name}_name\" => \"VARCHAR(30)\",
+    );
+}
+
+    ";
+
+    if (file_put_contents("$table_location/$table_file_name", $table_content)) {
+        echo "Successfully Created the DB Table Record in $table_location/$table_file_name \n";
+    }
+
+    echo "Please check the file $table_location/$table_file_name and Update Table Structure as needed. in the varaible $table_name\n";
+    echo " Then Press Enter to continue....\n";
+    waitForEnter();
+    echo "Upating Databse Tables \n";
+
+    init_db();
+
+}
+
+function RemoveDBTable (string $table_name) {
+
+    echo "Are you sure to delete the Table - $table_name\n";
+    echo "Be aware that all the the data will be removed from the databse\n";
+    echo "Press Enter if you want to continue......\n";
+    waitForEnter();
+
+    echo "Removing DB Table - $table_name\n";
+    $table_file_name = "$table_name.table.php";
+    $table_location = "databases";
+    deleteFileIfExists("$table_location/$table_file_name");
+
+    $databse = connect_to_db();
+
+    $databse->query("DROP TABLE $table_name");
+}
+
+function print_help()
+{
     echo "Help:\n";
 
     echo "--------------------------\n";
     echo "-get_all_db_data : get all the Database of tables and Print them in console |  this command was introduced for testing perpose only\n";
     echo "-init_db : Initialise DB and create out Databses\n";
     echo "-update_tables : Update all the tables attributes\n";
-    echo "-help : Print Aavailable arguments\n"; 
+    echo "-build : build the appliation | this build mode will improve the application performance for bigger websites\n";
+    echo "-start : Start a Server in the port user mentioned | Example -start <port_number>\n";
+    echo "-new_controller <controller_name> | create a new controller under controllers folder";
+    echo "-remove_controller <controller_name> | to remove all the controller files";
+    echo "-create_db_table <table_name> | create a new table record in code under databases and create the table";
+    echo "-remove_db_table <table_name> | remove a table record in code under databases and drop the table in databse";
+    echo "-help : Print Aavailable arguments\n";
 }

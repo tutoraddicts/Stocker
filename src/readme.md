@@ -4,59 +4,99 @@
 - [Application Documentation](#application-documentation)
   - [Table of Contents](#table-of-contents)
   - [Folder Tree](#folder-tree)
+  - [Routing](#routing)
+    - [How Routing Works](#how-routing-works)
+  - [Controller](#controller)
+    - [Default Controller](#default-controller)
+    - [How to create a controller](#how-to-create-a-controller)
+    - [How to Delete a Controller](#how-to-delete-a-controller)
   - [Setup Database](#setup-database)
     - [1. Create Database and Create Tables](#1-create-database-and-create-tables)
     - [2. Update the Table Structure according to the update](#2-update-the-table-structure-according-to-the-update)
   - [Syntax of the View](#syntax-of-the-view)
   - [How To](#how-to)
-    - [Create a Database File](#create-a-database-file)
-    - [Create Constructure File](#create-constructure-file)
+    - [How to create a controller](#how-to-create-a-controller-1)
+    - [How to Delete a Controller](#how-to-delete-a-controller-1)
+    - [Create a Table File and reocrd in Databse](#create-a-table-file-and-reocrd-in-databse)
+    - [Remove Table File and reocrd in Databse](#remove-table-file-and-reocrd-in-databse)
+    - [Alter a Table in Databse](#alter-a-table-in-databse)
+    - [Initialise Databse and Appication](#initialise-databse-and-appication)
+    - [Build the Apllication](#build-the-apllication)
     - [Get Data From Data base](#get-data-from-data-base)
 
 ## Folder Tree
 
-└───src
+```plaintext
+src
+│   .htaccess
+│   app_setup.php
+│   config.json
+│   index.php
+│   readme.md
+│   routes.json
+│
+├───.tempviews
+│       index.php
+│       login.php
+│       register.php
+│
+├───controllers
+│       HomeController.php
+│       LoginController.php
+│       RegisterController.php
+│
+├───databases
+│       Products.php
+│       Users.php
+│
+├───static
+│   ├───styles
+│   │       login.css
+│   │       main.css
+│   │
+│   └───view
+│           index.html
+│           login.html
+│           register.html
+│
+└───util
+        Controllers.php
+        DB.php
+        db_tables.php
+        demo.php.backup
+        file_handeler.php
+        request_handler.php
+        util.php
+```
 
-    │   .htaccess
-    │   app_setup.php
-    │   config.json
-    │   index.php
-    │   readme.md
-    │   routes.json
-    │
-    ├───.tempviews
-    │       index.php
-    │       login.php
-    │       register.php
-    │
-    ├───controllers
-    │       HomeController.php
-    │       LoginController.php
-    │       RegisterController.php
-    │
-    ├───databases
-    │       Products.php
-    │       Users.php
-    │
-    ├───static
-    │   ├───styles
-    │   │       login.css
-    │   │       main.css
-    │   │
-    │   └───view
-    │           index.html
-    │           login.html
-    │           register.html
-    │
-    └───util
-            Controllers.php
-            DB.php
-            db_tables.php
-            demo.php.backup
-            file_handeler.php
-            request_handler.php
-            util.php
+## Routing
 
+### How Routing Works
+
+if you hit a URL basically it will look for a controller in the controllers folder if it did not find the controller it throw an exception into it.
+**Example** : 
+    if you hit hostname/home/product
+    then home is the controller and product is the function you have written inside the controller.
+
+## Controller
+
+### Default Controller
+Default Cntroller Name is **Controller** you can find that under Controller Folder and it will be called when we hit the **/** Root URL. you can change the default configaration by specifying the controller name in config.json in the attribute **defaultController** you just have to pass the name of the controller example for home controller you have to mention home
+
+### How to create a controller
+
+Replace TableName with the actual name of your table, and define the columns and their data types in the $TableName property. Additionally, you can add any custom methods or functions specific to this table within the class.
+
+This template provides a basic structure for defining a table class in your application. Make sure to customize it according to your actual table schema and requirements.
+
+```bash
+php .\app_setup.php -new_controller <controller_name>
+```
+
+### How to Delete a Controller
+```bash
+php .\app_setup.php -remove_controller <controller_name>
+```
 
 ## Setup Database
 
@@ -101,95 +141,49 @@ For example, {{-- Add more products here --}} is a comment.
 
 ## How To
 
-### Create a Database File
-
-```php 
-<?php
-
-/**
- * Define a class for the TableName table extending the DBTables class
- */
-class TableName extends DBTables
-{
-    /**
-     * Define a public property with the same name as the class for the table structure
-     * The first element of the array should be the primary key attribute
-     */
-    public $TableName = array(
-        "column1" => "data_type", // The first element is the primary key attribute
-        "column2" => "data_type",
-        // Add more columns as needed
-    );
-
-    /**
-     * Define any additional methods or functions related to the TableName table
-     */
-}
-
-?>
-
+### How to create a controller
+```bash
+php .\app_setup.php -new_controller <controller_name>
 ```
 
-Replace TableName with the actual name of your table, and define the columns and their data types in the $TableName property. Additionally, you can add any custom methods or functions specific to this table within the class.
-
-This template provides a basic structure for defining a table class in your application. Make sure to customize it according to your actual table schema and requirements.
-
-### Create Constructure File
-
-1. Create a new PHP file in the controllers directory of your application.
-2. Define a new class for the controller and give it a meaningful name.
-3. Add functions within the class to handle different functionalities related to the controller's purpose.
-4. Customize the functions with your specific logic for handling each functionality.
-4. Save the file and make sure it follows the naming convention (ControllerName.php) and is placed in the controllers directory.
-5. Once you've created the controller class, you can use it to define routes in your routes.json file and implement the corresponding logic for your application.
-
-```php 
-<?php
-
-/**
- * Controller responsible for basic functionalities
- */
-class BasicController
-{
-    /**
-     * Example function to display a welcome message
-     */
-    function welcome()
-    {
-        echo "Welcome to our application!";
-    }
-
-    /**
-     * Example function to handle user input
-     * @param string $name - The name provided by the user
-     */
-    function greet($name, ...$aditionalInfo)
-    {
-        echo "Hello, $name!";
-    }
-}
-
-?>
-
+### How to Delete a Controller
+```bash
+php .\app_setup.php -remove_controller <controller_name>
 ```
 
-`$name` and `$age` are explicitly defined arguments.
-Any additional parameters passed to the function will be collected in ...$additionalInfo.
-If the user passes processUser('John', 30, 'Male', 'Programmer'), then 'Male' and 'Programmer' will be collected in ...$additionalInfo.
+### Create a Table File and reocrd in Databse
 
-```php
-/**
- * Example function to demonstrate argument handling
- * @param string $name - The name provided by the user
- * @param int $age - The age provided by the user
- * @param string ...$additionalInfo - Additional information passed as variable arguments
- */
-function processUser($name, $age, ...$additionalInfo)
-{
-    echo "Name: $name, Age: $age\n";
-    echo "Additional Info: " . implode(', ', $additionalInfo);
-}
+create a new table record in code under databases and create the table
 
+```bash
+php .\app_setup.php -create_db_table <table_name>
+```
+
+### Remove Table File and reocrd in Databse
+
+remove a table record in code under databases and drop the table in databse
+
+```bash
+php .\app_setup.php -remove_db_table <table_name>
+```
+
+### Alter a Table in Databse
+
+```bash
+php .\app_setup.php -init_db
+```
+
+### Initialise Databse and Appication
+
+```bash
+php .\app_setup.php -init_db
+```
+
+### Build the Apllication
+
+buid application you can find in the build directory outside of the src directory
+```bash
+php .\app_setup.php -build
 ```
 
 ### Get Data From Data base

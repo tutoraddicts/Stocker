@@ -1,46 +1,44 @@
 <?php
 class LoginController
 {
-    public function login($username = null, $password = null)
-    {
-        global $DB;
-        
-
+    public function Login($username = null, $password = null)
+    {      
         if ($username == null || $password == null) { // just the login page where the user will pass username and password 
-            $data = array(
-                "title" => "login"
-            );
+            $data = [
+                "title" => "login",
+                "massage" => "Please submit a valid username and password"
+            ];
             loadView(
                 "login",
                 $data
             );
         }else {
-            // var_dump($DB->Users);
-            // $check_user = $DB->Users->check_user($username,$password);
             $user = new Users();
             $check_user = $user->Get(array(
-                "user_name" => array (
-                    "$username" => "="
-                ),
-                "password" => array (
-                    "$password" => "="
-                ),
+                "user_name" => [
+                    $username => "="
+                ],
+                "password" => [
+                    $password => "="
+                ],
                 ));
                 // var_dump($check_user);
             if ( $check_user ){
-                echo "Successfully Loggedin";
-                session_start();
-                $_SESSION['user_name'] = $username;
-                redirect("./");
+                logconsole("Successfully Loggedin");
+                if ( session_start() ) {
+                    $_SESSION['user_name'] = $username;
+                    redirect("./");
+                }
+                
             }else {
-                echo "Not able tologin</br>";
+                echo "Not able Find the User with such name</br>";
             }
             // echo "username : $username and password : $password";
         }
 
     }
 
-    public function LogOut() {
+    public function logout() {
         session_destroy();
         redirect('./');
     }
