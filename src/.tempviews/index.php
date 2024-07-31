@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Beautiful Home Page</title>
-    <link rel="stylesheet" href="Static/Styles/main.css">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
 
 <body>
@@ -40,14 +40,15 @@
         </ul>
     </nav>
     <main>
+        <a>Welcome to the Site <?php echo $User ?></a>
         <h2>List of Products</h2>
         <button class="add-product-btn">Add Product</button>
         <button class="bill-product-btn">Bill Product</button>
 
-        <?php if(isset($products)): ?> 
+        <?php if(isset($products) && $products != null): ?> 
 <ul class="product-list"></ul>
         <?php foreach($products as $product_name => $data): ?>
-        <li><?php  echo $product_name  ?></li>
+        <li><?php  echo $data["productName"]  ?></li>
         <?php endforeach; ?>
         <!-- Add more products here -->
         </ul>

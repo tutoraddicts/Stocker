@@ -12,11 +12,18 @@ $FLAGS = array(
 );
 
 $config = json_decode(file_get_contents("config.json"), false);
+$build_done = $false;
 
 if ($argc > 1) {
     // access command line arguments starting from index 1
     for ($i = 1; $i < $argc; $i++) {
         switch ($argv[$i]) {
+            case "-run":
+                Run();
+                break;
+            case "-live":
+                Live();
+                break;
             case "-get_all_db_data":
                 get_all_db_data();
                 break;
@@ -242,6 +249,37 @@ function get_db_tables(): array
     }
 
     return $array_of_tables;
+}
+
+/**
+ * Build the application and start a server in the build mode
+ * @return void
+ */
+function Run() {
+    echo "initialising DB for Update\n";
+    init_db();
+    echo "Building the Application\n";
+    build();
+
+    echo "Starting the Server in localhost:80\n";
+
+    $currentDir = getcwd();
+    chdir("../build/");
+    shell_exec("php -S localhost:80 -t . \"util/util.php\" > server.log");
+    chdir($currentDir);
+}
+
+/**
+ * Initialise DB and Start the Server in Development source
+ * @return void
+ */
+function Live() {
+    echo "initialising DB for Update\n";
+    init_db();
+
+    echo "Starting the Server in localhost:8080\n";
+
+    shell_exec("php -S localhost:80 -t . \"util/util.php\" > server.log");
 }
 
 function init_db(): void
@@ -657,14 +695,16 @@ function print_help()
     echo "Help:\n";
 
     echo "--------------------------\n";
+    echo "-run : build and run the server\n";
+    echo "-live : run server on development build\n";
     echo "-get_all_db_data : get all the Database of tables and Print them in console |  this command was introduced for testing perpose only\n";
     echo "-init_db : Initialise DB and create out Databses\n";
     echo "-update_tables : Update all the tables attributes\n";
     echo "-build : build the appliation | this build mode will improve the application performance for bigger websites\n";
     echo "-start : Start a Server in the port user mentioned | Example -start <port_number>\n";
-    echo "-new_controller <controller_name> | create a new controller under controllers folder";
-    echo "-remove_controller <controller_name> | to remove all the controller files";
-    echo "-create_db_table <table_name> | create a new table record in code under databases and create the table";
-    echo "-remove_db_table <table_name> | remove a table record in code under databases and drop the table in databse";
+    echo "-new_controller <controller_name> | create a new controller under controllers folder\n";
+    echo "-remove_controller <controller_name> | to remove all the controller files\n";
+    echo "-create_db_table <table_name> | create a new table record in code under databases and create the table\n";
+    echo "-remove_db_table <table_name> | remove a table record in code under databases and drop the table in databse\n";
     echo "-help : Print Aavailable arguments\n";
 }

@@ -15,6 +15,7 @@
     - [2. Update the Table Structure according to the update](#2-update-the-table-structure-according-to-the-update)
   - [Syntax of the View](#syntax-of-the-view)
   - [How To](#how-to)
+    - [Do First Startup](#do-first-startup)
     - [How to create a controller](#how-to-create-a-controller-1)
     - [How to Delete a Controller](#how-to-delete-a-controller-1)
     - [Create a Table File and reocrd in Databse](#create-a-table-file-and-reocrd-in-databse)
@@ -140,6 +141,18 @@ For example, {{-- Add more products here --}} is a comment.
 
 
 ## How To
+
+### Do First Startup
+
+To start with Development mode
+```bash
+php .\app_setup.php -live
+```
+
+To Start with Build Mode
+```bash
+php .\app_setup.php -run
+```
 
 ### How to create a controller
 ```bash
