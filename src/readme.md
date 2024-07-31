@@ -4,6 +4,8 @@
 - [Application Documentation](#application-documentation)
   - [Table of Contents](#table-of-contents)
   - [Folder Tree](#folder-tree)
+  - [Routing](#routing)
+    - [How Routing Works](#how-routing-works)
   - [Controller](#controller)
     - [Default Controller](#default-controller)
     - [How to create a controller](#how-to-create-a-controller)
@@ -60,6 +62,15 @@
             file_handeler.php
             request_handler.php
             util.php
+
+## Routing
+
+### How Routing Works
+
+if you hit a URL basically it will look for a controller in the controllers folder if it did not find the controller it throw an exception into it.
+**Example** : 
+    if you hit hostname/home/product
+    then home is the controller and product is the function you have written inside the controller.
 
 ## Controller
 
