@@ -6,6 +6,8 @@
   - [Folder Tree](#folder-tree)
   - [Controller](#controller)
     - [Default Controller](#default-controller)
+    - [How to create a controller](#how-to-create-a-controller)
+    - [How to Delete a Controller](#how-to-delete-a-controller)
   - [Setup Database](#setup-database)
     - [1. Create Database and Create Tables](#1-create-database-and-create-tables)
     - [2. Update the Table Structure according to the update](#2-update-the-table-structure-according-to-the-update)
@@ -62,7 +64,17 @@
 ## Controller
 
 ### Default Controller
-Default Cntroller Name is **Controller** you can find that under Controller Folder and it will be called when we hit the **/** Root URL
+Default Cntroller Name is **Controller** you can find that under Controller Folder and it will be called when we hit the **/** Root URL. you can change the default configaration by specifying the controller name in config.json in the attribute **defaultController** you just have to pass the name of the controller example for home controller you have to mention home
+
+### How to create a controller
+```bash
+php .\app_setup.php -newController <controller_name>
+```
+
+### How to Delete a Controller
+```bash
+php .\app_setup.php -removeController <controller_name>
+```
 
 ## Setup Database
 

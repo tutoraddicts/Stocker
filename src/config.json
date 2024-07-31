@@ -10,5 +10,5 @@
     },
 
     "holdSession" : true,
-    "defaultController": ""
+    "defaultController": "home"
 }
