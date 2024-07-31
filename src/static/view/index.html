@@ -19,7 +19,7 @@
                 <img src="user-image.jpg" alt="User Image" class="user-image">
                 <div class="dropdown-content">
                     <a href="#">Account</a>
-                    <a href="logout">Logout</a>
+                    <a href="Login/logout">Logout</a>
                 </div>
             </div>
         </div>
@@ -40,6 +40,7 @@
         </ul>
     </nav>
     <main>
+        <a>Welcome to the Site {{echo $User}}</a>
         <h2>List of Products</h2>
         <button class="add-product-btn">Add Product</button>
         <button class="bill-product-btn">Bill Product</button>
@@ -47,7 +48,7 @@
         @if (isset($products))
         <ul class="product-list"></ul>
         @foreach ($products as $product_name => $data)
-        <li>{{ echo $product_name }}</li>
+        <li>{{ echo $data["productName"] }}</li>
         @endforeach
         <!-- Add more products here -->
         </ul>

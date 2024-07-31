@@ -92,3 +92,6 @@ Stack trace:
 [Mon Jun 24 13:54:10 2024] [::1]:49591 Closing
 [Mon Jun 24 13:54:10 2024] [::1]:49592 Accepted
 [Mon Jun 24 13:54:10 2024] [::1]:49592 Closing
+[Mon Jun 24 14:00:19 2024] [::1]:49844 Accepted
+[Mon Jun 24 14:01:26 2024] [::1]:49844 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Jun 24 14:01:26 2024] [::1]:49844 Closing

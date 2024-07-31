@@ -4,7 +4,7 @@
  * Create a class and add varible with same name of the class 
  * Note - First element of the array will always be the key element to get the data and that have to be unique in all cases
  */
-class Users extends DBTables
+class Users extends DB
 {
     public $Users = array(
         "user_name" => "VARCHAR(50)", // first eliment is the Key attribute to get the data

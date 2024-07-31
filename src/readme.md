@@ -4,6 +4,8 @@
 - [Application Documentation](#application-documentation)
   - [Table of Contents](#table-of-contents)
   - [Folder Tree](#folder-tree)
+  - [Controller](#controller)
+    - [Default Controller](#default-controller)
   - [Setup Database](#setup-database)
     - [1. Create Database and Create Tables](#1-create-database-and-create-tables)
     - [2. Update the Table Structure according to the update](#2-update-the-table-structure-according-to-the-update)
@@ -57,6 +59,10 @@
             request_handler.php
             util.php
 
+## Controller
+
+### Default Controller
+Default Cntroller Name is **Controller** you can find that under Controller Folder and it will be called when we hit the **/** Root URL
 
 ## Setup Database
 

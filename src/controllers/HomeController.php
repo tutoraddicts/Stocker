@@ -1,5 +1,4 @@
 <?php
-include_once("index.php");
 /* 
 Record Perpose 
 
@@ -23,19 +22,20 @@ class HomeController
     public function print_temp() {
         echo "$this->temp \n";
     }
-    public function index(...$args)
+    public function Home(...$args)
     {
-        global $Controllers;
-        global $DB;
         // if user not logged in then redirect to different route
         if(!isUserLoggedin()){
             redirect("login"); // login is the name of the redirect url /redirect
             return;
         }
+
+        $products = new Products();
         // var_dump($DB->Users->{$_SESSION['user_name']});
         $data = array(
             "PageName" => "BillingApp",
-            "User" => $_SESSION['user_name']
+            "User" => $_SESSION['user_name'],
+            "products" => $products->Get()
         );
         // include "Static/View/index.php";
         loadView(
@@ -43,5 +43,6 @@ class HomeController
             $data,
             $args
         );
+        
     }
 }

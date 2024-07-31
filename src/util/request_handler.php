@@ -3,16 +3,6 @@
 global $routes;
 global $requestUrl;
 
-/**
- * Handeling the Css Js Static file structure
-*/
-$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-echo $uri;
-// Serve the requested resource as-is if it exists
-if ($uri !== '/' && file_exists(__DIR__ . $uri)) {
-    return false;
-}
-
 
 
 // Get relative URL from absolute URL
@@ -46,7 +36,6 @@ function getQueries(&$stringofQueries = null): array
     return $result;
 }
 
-
 // var_dump($requestUrl);
 
 /**
@@ -62,57 +51,46 @@ function handleServerRequestes(): void
 {
     // Global variables to store request URL and routes
     global $requestUrl;
-    global $routes;
-
-    global $Controllers;
+    global $config;
 
     // Parse requested URL and queries
-    // $tempRequest = explode("?", $requestUrl);
-    // $tempRequest = explode("?", getRelativeUrl($requestUrl));
     $tempRequest = explode("?", $requestUrl);
-    $relativeRequestUrl = $tempRequest[0];
-    $relativeQuery = isset($tempRequest[1]) ? getQueries($tempRequest[1]) : getQueries();
+    $relativeRequestUrl = &$tempRequest[0];
+    $relativeQuery = isset($tempRequest[1]) ? getQueries($tempRequest[1]) : getQueries(); // if any request came from url that means that is Get query else it is POST
 
     // echo $relativeRequestUrl;
-    logconsole($relativeRequestUrl);
-    // Match routes and call associated controller methods
-    if (array_key_exists($relativeRequestUrl, $routes)) { // Check if the requested URL matches any defined route
-        $routeParts = explode('@', $routes[$relativeRequestUrl]); // Split the controller and method name
-        $controllerName = $routeParts[0]; // Get the controller name
-        $actionName = $routeParts[1]; // Get the method name
+    logconsole("Relative requested url is $relativeRequestUrl");
 
-        // Check if the controller class exists
-        if (class_exists($controllerName)) { // Check if the controller class exists
-            global $config;
-            // if ($config->build == false) {
-                ${$controllerName} = new $controllerName();
-            // }else {
-            //     // Will Add this feature later
-            //     // Load Serialised Object
-            // }
-            $controller = &${$controllerName}; // Create an instance of the controller
+    $reuquested_methods = explode('/', $relativeRequestUrl); // if I am sending /login/failed then it will devide it in three arrays
+    // By default the class will be in index number 1 later on it will be functions means index 2 will be function name
 
-            // Check if the controller method exists
-            if (method_exists($controller, $actionName)) { // Check if the method exists in the controller
-                call_user_func_array(array($controller, $actionName), $relativeQuery); // Call the method with the query parameters
-            } else {
-                // If the method does not exist, return a 404 error
-                http_response_code(404);
-                echo "404 Method Does not exist: ($actionName)";
-            }
+
+    $controllerName = $reuquested_methods[1]; // Get the controller name
+    $controllerClassName = "{$controllerName}Controller";
+    $actionName =(isset($reuquested_methods[2]) && $reuquested_methods[2] != "") ? $reuquested_methods[2] : ($controllerName != "" ? $controllerName : "Controller");
+    // $test = isset($reuquested_methods[2]) && $reuquested_methods[2] != "";
+    // logconsole("user requested action is : ({$reuquested_methods[2]}) -- $test -- $actionName" );
+
+
+    if (class_exists($controllerClassName)) { // Check if the controller class exists
+        $controller = new $controllerClassName(); // Create an instance of the controller
+        logconsole("Controller Exist $controllerClassName");
+        // Check if the controller method exists
+        if (method_exists($controller, $actionName)) { // Check if the method exists in the controller
+            call_user_func_array([$controller, $actionName], $relativeQuery); // Call the method with the query parameters
+            logconsole("loading $controllerClassName->$actionName");
         } else {
-            // If the controller class does not exist, return a 404 error
+            // If the method does not exist, return a 404 error
             http_response_code(404);
-            echo "404 Controller Does not exist: ($controllerName)";
+            echo "404 Method Does not exist: ($actionName) in class ($controllerClassName)";
         }
     } else {
-        // If the requested URI is not present in the route table, return a 404 error
+        // If the controller class does not exist, return a 404 error
         http_response_code(404);
         echo "
-        404 Requested URI is not present in Route Table: No Controller Found ($relativeRequestUrl)</br>
-        There are few Solutions are there </br>
-        1. Check the routes.joson for any mistake </br>
-        2. If you are running the server from root of the src then comment out line no.26 and uncomment line no.25";
+            404 Requested Controller is not present in the application: No Controller Found ($controllerClassName)</br>
+            There are few Solutions are there </br>
+            1. Recheck if the Route Table is there";
     }
 }
 

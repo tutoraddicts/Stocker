@@ -19,7 +19,7 @@
                 <img src="user-image.jpg" alt="User Image" class="user-image">
                 <div class="dropdown-content">
                     <a href="#">Account</a>
-                    <a href="logout">Logout</a>
+                    <a href="Login/logout">Logout</a>
                 </div>
             </div>
         </div>

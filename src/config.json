@@ -1,6 +1,5 @@
 {
     "build": false,
-    
     "errorShow": true,
 
     "database": {
@@ -10,5 +9,6 @@
         "password": "P@ssw0rd#St0cker"
     },
 
-    "holdSession" : true
+    "holdSession" : true,
+    "defaultController": ""
 }

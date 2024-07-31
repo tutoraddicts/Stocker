@@ -27,7 +27,7 @@ function loadView($viewName, &$data = array(), &$args = array()): void
 
         include_once "./.tempviews/$viewName.php";
     } else {
-        include_once "Static/View/$viewName.php";
+        include_once "Static/View/$viewName.html.php";
     }
 
 }

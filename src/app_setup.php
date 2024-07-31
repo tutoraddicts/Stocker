@@ -1,6 +1,6 @@
 <?php
 
-require_once ("./util/db_tables.php");
+// require_once ("./util/db_tables.php");
 require_once ("./util/file_handeler.php");
 
 /**
